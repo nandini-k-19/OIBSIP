@@ -77,9 +77,8 @@ app.add_middleware(
         "http://127.0.0.1:5174",
         "http://localhost:3000",
         settings.FRONTEND_URL,
-        "*"
     ],
-    allow_origin_regex=r"https://.*\.vercel\.app|https://.*\.render\.com|https://.*\.netlify\.app",
+    allow_origin_regex=r"https://.*\.onrender\.com|https://.*\.render\.com|https://.*\.vercel\.app|https://.*\.netlify\.app|http://localhost:\d+",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
