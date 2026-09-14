@@ -43,9 +43,16 @@ export default function Register() {
         navigate('/login');
       }, 1500);
     } catch (err) {
-      setErrorMessage(
-        err.response?.data?.detail || 'Registration failed. Email might already be taken.'
-      );
+      const isNetworkError = !err.response || err.code === 'ERR_NETWORK' || err.message?.includes('Network') || (err.response && err.response.status >= 500);
+      if (isNetworkError) {
+        setErrorMessage(
+          'Connecting to backend server... Cloud server is waking up (~30s). Please retry in a few seconds.'
+        );
+      } else {
+        setErrorMessage(
+          err.response?.data?.detail || 'Registration failed. Email might already be taken.'
+        );
+      }
     } finally {
       setLoading(false);
     }
