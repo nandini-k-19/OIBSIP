@@ -23,6 +23,25 @@ async def lifespan(app: FastAPI):
     try:
         Base.metadata.create_all(bind=engine)
         logger.info("Database tables initialized successfully.")
+        
+        # Auto-seed initial catalog and admin if empty
+        from app.database import SessionLocal
+        from app.models.pizza import Pizza
+        from app.models.user import User
+        db = SessionLocal()
+        try:
+            if db.query(Pizza).count() == 0 or db.query(User).count() == 0:
+                logger.info("Database empty on startup. Running initial seed...")
+                try:
+                    from seed import seed_database
+                    seed_database()
+                    logger.info("Database auto-seeded successfully on startup.")
+                except Exception as seed_err:
+                    logger.warning(f"Could not run seed_database: {seed_err}")
+        except Exception as query_err:
+            logger.warning(f"Auto-seed check note: {query_err}")
+        finally:
+            db.close()
     except Exception as e:
         logger.error(f"Error creating database tables on startup: {e}")
 
@@ -54,9 +73,13 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5174",
         "http://localhost:3000",
-        settings.FRONTEND_URL
+        settings.FRONTEND_URL,
+        "*"
     ],
+    allow_origin_regex=r"https://.*\.vercel\.app|https://.*\.render\.com|https://.*\.netlify\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

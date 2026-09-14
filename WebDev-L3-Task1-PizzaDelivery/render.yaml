@@ -1,0 +1,32 @@
+﻿services:
+  - type: web
+    name: pizzahub-backend
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    rootDir: WebDev-L3-Task1-PizzaDelivery/backend
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.8
+      - key: SECRET_KEY
+        generateValue: true
+
+  - type: web
+    name: pizzahub-frontend
+    runtime: static
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: dist
+    rootDir: WebDev-L3-Task1-PizzaDelivery/frontend
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: pizzahub-backend
+          property: host
+          value: https://${host}/api
+      - key: VITE_WS_URL
+        fromService:
+          type: web
+          name: pizzahub-backend
+          property: host
+          value: wss://${host}
