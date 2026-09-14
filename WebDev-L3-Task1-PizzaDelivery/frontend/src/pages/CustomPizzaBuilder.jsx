@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useCart } from '../context/CartContext';
+import { DEFAULT_CUSTOM_OPTIONS } from '../data/defaultCatalog';
 import { 
   ChevronRight, 
   ChevronLeft, 
@@ -23,13 +24,13 @@ const STEPS = [
 
 export default function CustomPizzaBuilder() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [options, setOptions] = useState({ bases: [], sauces: [], cheeses: [], vegetables: [] });
-  const [loading, setLoading] = useState(true);
+  const [options, setOptions] = useState(DEFAULT_CUSTOM_OPTIONS);
+  const [loading, setLoading] = useState(false);
 
   // Selections
-  const [selectedBase, setSelectedBase] = useState(null);
-  const [selectedSauce, setSelectedSauce] = useState(null);
-  const [selectedCheese, setSelectedCheese] = useState(null);
+  const [selectedBase, setSelectedBase] = useState(DEFAULT_CUSTOM_OPTIONS.bases[0]);
+  const [selectedSauce, setSelectedSauce] = useState(DEFAULT_CUSTOM_OPTIONS.sauces[0]);
+  const [selectedCheese, setSelectedCheese] = useState(DEFAULT_CUSTOM_OPTIONS.cheeses[0]);
   const [selectedVegetables, setSelectedVegetables] = useState([]);
 
   const { addCustomPizza } = useCart();
@@ -39,13 +40,14 @@ export default function CustomPizzaBuilder() {
     const fetchOptions = async () => {
       try {
         const res = await api.get('/pizzas/custom-options');
-        setOptions(res.data);
-        // Default select first available
-        if (res.data.bases?.length > 0) setSelectedBase(res.data.bases[0]);
-        if (res.data.sauces?.length > 0) setSelectedSauce(res.data.sauces[0]);
-        if (res.data.cheeses?.length > 0) setSelectedCheese(res.data.cheeses[0]);
+        if (res.data && res.data.bases?.length > 0) {
+          setOptions(res.data);
+          setSelectedBase(res.data.bases[0]);
+          setSelectedSauce(res.data.sauces[0]);
+          setSelectedCheese(res.data.cheeses[0]);
+        }
       } catch (err) {
-        console.error('Failed to load custom builder options', err);
+        console.warn('Backend custom options connection notice, using catalog default', err);
       } finally {
         setLoading(false);
       }

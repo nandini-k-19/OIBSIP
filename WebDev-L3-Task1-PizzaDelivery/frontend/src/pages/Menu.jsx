@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../services/api';
 import { useCart } from '../context/CartContext';
 import PizzaShapedCard from '../components/PizzaShapedCard';
+import { DEFAULT_PIZZAS } from '../data/defaultCatalog';
 import { 
   Plus, 
   Check, 
@@ -16,8 +17,8 @@ import {
 } from 'lucide-react';
 
 export default function Menu() {
-  const [pizzas, setPizzas] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [pizzas, setPizzas] = useState(DEFAULT_PIZZAS);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCollection, setActiveCollection] = useState('all');
   const [vegOnly, setVegOnly] = useState(false);
@@ -41,9 +42,11 @@ export default function Menu() {
     const fetchPizzas = async () => {
       try {
         const res = await api.get('/pizzas');
-        setPizzas(res.data || []);
+        if (res.data && res.data.length > 0) {
+          setPizzas(res.data);
+        }
       } catch (err) {
-        console.error('Failed to fetch pizzas', err);
+        console.warn('Backend API connection notice, using catalog default', err);
       } finally {
         setLoading(false);
       }
