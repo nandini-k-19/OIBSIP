@@ -10,42 +10,47 @@ from app.models.admin import Admin
 from app.models.pizza import PizzaBase, Sauce, Cheese, Vegetable, Pizza
 from app.auth.passwords import hash_password
 
-def seed_database():
-    print("Re-creating all tables with fresh normalized schema...")
-    Base.metadata.drop_all(bind=engine)
+def seed_database(drop_existing=False):
+    if drop_existing:
+        print("Re-creating all tables with fresh normalized schema...")
+        Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
 
     try:
-        # 1. Seed Admin Account
-        print("Creating default Admin user (admin@pizzahub.com)...")
-        admin_user = User(
-            full_name="PizzaHub Master Admin",
-            email="admin@pizzahub.com",
-            hashed_password=hash_password("admin123"),
-            role=UserRole.ADMIN,
-            is_verified=True
-        )
-        db.add(admin_user)
-        db.flush()
+        # 1. Seed Admin Account if not exists
+        admin_user = db.query(User).filter(User.email == "admin@pizzahub.com").first()
+        if not admin_user:
+            print("Creating default Admin user (admin@pizzahub.com)...")
+            admin_user = User(
+                full_name="PizzaHub Master Admin",
+                email="admin@pizzahub.com",
+                hashed_password=hash_password("admin123"),
+                role=UserRole.ADMIN,
+                is_verified=True
+            )
+            db.add(admin_user)
+            db.flush()
 
-        admin_meta = Admin(
-            user_id=admin_user.id,
-            department="Operations & Inventory",
-            permissions="all"
-        )
-        db.add(admin_meta)
+            admin_meta = Admin(
+                user_id=admin_user.id,
+                department="Operations & Inventory",
+                permissions="all"
+            )
+            db.add(admin_meta)
 
-        # 2. Seed Demo Customer Account
-        print("Creating Demo Customer user (user@pizzahub.com)...")
-        demo_user = User(
-            full_name="Alex Customer",
-            email="user@pizzahub.com",
-            hashed_password=hash_password("user123"),
-            role=UserRole.USER,
-            is_verified=True
-        )
-        db.add(demo_user)
+        # 2. Seed Demo Customer Account if not exists
+        demo_user = db.query(User).filter(User.email == "user@pizzahub.com").first()
+        if not demo_user:
+            print("Creating Demo Customer user (user@pizzahub.com)...")
+            demo_user = User(
+                full_name="Alex Customer",
+                email="user@pizzahub.com",
+                hashed_password=hash_password("user123"),
+                role=UserRole.USER,
+                is_verified=True
+            )
+            db.add(demo_user)
 
         # 3. Seed Pizza Bases (5 distinct bases)
         bases = [
