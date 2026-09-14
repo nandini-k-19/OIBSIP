@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import api from '../services/api';
+import api, { WS_BASE_URL } from '../services/api';
 import { 
   CheckCircle2, 
   Flame, 
@@ -47,7 +47,7 @@ export default function OrderTracking() {
   useEffect(() => {
     if (!orderId) return;
 
-    const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:8000';
+    const wsUrl = WS_BASE_URL;
     let ws;
 
     try {

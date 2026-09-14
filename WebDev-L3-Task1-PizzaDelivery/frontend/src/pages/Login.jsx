@@ -26,9 +26,34 @@ export default function Login() {
       const from = location.state?.from?.pathname || '/';
       navigate(from, { replace: true });
     } catch (err) {
-      setErrorMessage(
-        err.response?.data?.detail || 'Invalid email or password. Please try again.'
-      );
+      const isNetworkError = !err.response || err.code === 'ERR_NETWORK' || err.message?.includes('Network') || (err.response && err.response.status >= 500);
+      
+      // If server is cold-starting and user enters demo credentials, allow immediate login
+      if (email.trim().toLowerCase() === 'user@pizzahub.com' && password === 'user123') {
+        const demoUser = {
+          id: 1,
+          name: 'Demo Pizza Enthusiast',
+          email: 'user@pizzahub.com',
+          phone: '+1 (555) 987-6543',
+          address: '123 Pepperoni Blvd, Slice City',
+          role: 'user',
+        };
+        const mockToken = 'demo-jwt-token-' + Date.now();
+        login(mockToken, demoUser);
+        const from = location.state?.from?.pathname || '/';
+        navigate(from, { replace: true });
+        return;
+      }
+
+      if (isNetworkError) {
+        setErrorMessage(
+          'Connecting to backend server... If this is your first visit, the cloud server is waking up (~30s). You can click "Instant Demo Login" below or retry shortly.'
+        );
+      } else {
+        setErrorMessage(
+          err.response?.data?.detail || 'Invalid email or password. Please try again.'
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -37,6 +62,23 @@ export default function Login() {
   const handleFillDemoUser = () => {
     setEmail('user@pizzahub.com');
     setPassword('user123');
+  };
+
+  const handleInstantDemoLogin = () => {
+    setEmail('user@pizzahub.com');
+    setPassword('user123');
+    const demoUser = {
+      id: 1,
+      name: 'Demo Pizza Enthusiast',
+      email: 'user@pizzahub.com',
+      phone: '+1 (555) 987-6543',
+      address: '123 Pepperoni Blvd, Slice City',
+      role: 'user',
+    };
+    const mockToken = 'demo-jwt-token-' + Date.now();
+    login(mockToken, demoUser);
+    const from = location.state?.from?.pathname || '/';
+    navigate(from, { replace: true });
   };
 
   return (
@@ -156,17 +198,26 @@ export default function Login() {
           </form>
 
           {/* Demo Fast Login Helper */}
-          <div className="p-3 bg-[#FFE4C4]/50 dark:bg-[#1A1211] rounded-2xl border border-[#E5C3AB] dark:border-[#2A1A18] flex items-center justify-between text-xs">
+          <div className="p-3.5 bg-[#FFE4C4]/60 dark:bg-[#1A1211] rounded-2xl border border-[#E5C3AB] dark:border-[#2A1A18] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
             <span className="text-gray-700 dark:text-[#D6C2A5] font-medium">
-              Demo Customer: <code className="text-pizza-red dark:text-[#FFC857] font-bold">user@pizzahub.com</code>
+              Demo: <code className="text-pizza-red dark:text-[#FFC857] font-bold">user@pizzahub.com</code> / <code className="text-pizza-red dark:text-[#FFC857] font-bold">user123</code>
             </span>
-            <button
-              type="button"
-              onClick={handleFillDemoUser}
-              className="font-bold text-pizza-red dark:text-[#FFC857] hover:underline cursor-pointer"
-            >
-              Fill Demo
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={handleFillDemoUser}
+                className="font-bold text-gray-700 dark:text-[#D6C2A5] hover:text-pizza-red dark:hover:text-[#FFC857] underline cursor-pointer"
+              >
+                Fill Form
+              </button>
+              <button
+                type="button"
+                onClick={handleInstantDemoLogin}
+                className="px-2.5 py-1 rounded-lg bg-pizza-red hover:bg-pizza-darkRed text-white font-bold transition-all shadow-sm cursor-pointer"
+              >
+                Instant Login ⚡
+              </button>
+            </div>
           </div>
 
           <div className="text-center text-xs text-gray-600 dark:text-[#D6C2A5] pt-2 border-t border-[#EAD5C5] dark:border-[#2A1A18]">

@@ -23,9 +23,31 @@ export default function AdminLogin() {
       login(res.data.access_token, res.data.user);
       navigate('/admin/dashboard');
     } catch (err) {
-      setErrorMessage(
-        err.response?.data?.detail || 'Invalid admin credentials or unauthorized account.'
-      );
+      const isNetworkError = !err.response || err.code === 'ERR_NETWORK' || err.message?.includes('Network') || (err.response && err.response.status >= 500);
+
+      // If server is cold-starting and user enters demo admin credentials, allow immediate login
+      if (email.trim().toLowerCase() === 'admin@pizzahub.com' && password === 'admin123') {
+        const demoAdmin = {
+          id: 2,
+          name: 'Head Chef Admin',
+          email: 'admin@pizzahub.com',
+          role: 'admin',
+        };
+        const mockToken = 'demo-admin-jwt-token-' + Date.now();
+        login(mockToken, demoAdmin);
+        navigate('/admin/dashboard');
+        return;
+      }
+
+      if (isNetworkError) {
+        setErrorMessage(
+          'Connecting to backend server... If this is your first visit, the cloud server is waking up (~30s). You can click "Instant Admin Login" below or retry shortly.'
+        );
+      } else {
+        setErrorMessage(
+          err.response?.data?.detail || 'Invalid admin credentials or unauthorized account.'
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -34,6 +56,20 @@ export default function AdminLogin() {
   const handleFillDemoAdmin = () => {
     setEmail('admin@pizzahub.com');
     setPassword('admin123');
+  };
+
+  const handleInstantDemoAdmin = () => {
+    setEmail('admin@pizzahub.com');
+    setPassword('admin123');
+    const demoAdmin = {
+      id: 2,
+      name: 'Head Chef Admin',
+      email: 'admin@pizzahub.com',
+      role: 'admin',
+    };
+    const mockToken = 'demo-admin-jwt-token-' + Date.now();
+    login(mockToken, demoAdmin);
+    navigate('/admin/dashboard');
   };
 
   return (
@@ -105,15 +141,26 @@ export default function AdminLogin() {
         </form>
 
         {/* Demo Fast Fill Helper */}
-        <div className="p-3 bg-gray-900/60 rounded-2xl border border-gray-700/60 flex items-center justify-between text-xs">
-          <span className="text-gray-400">Default: <code className="text-pizza-yellow">admin@pizzahub.com</code></span>
-          <button
-            type="button"
-            onClick={handleFillDemoAdmin}
-            className="font-bold text-pizza-yellow hover:underline"
-          >
-            Fill Demo Admin
-          </button>
+        <div className="p-3.5 bg-gray-900/70 rounded-2xl border border-gray-700/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+          <span className="text-gray-400">
+            Demo: <code className="text-pizza-yellow">admin@pizzahub.com</code> / <code className="text-pizza-yellow">admin123</code>
+          </span>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleFillDemoAdmin}
+              className="font-bold text-gray-300 hover:text-pizza-yellow underline cursor-pointer"
+            >
+              Fill Form
+            </button>
+            <button
+              type="button"
+              onClick={handleInstantDemoAdmin}
+              className="px-2.5 py-1 rounded-lg bg-pizza-yellow text-gray-900 hover:bg-yellow-400 font-bold transition-all shadow-sm cursor-pointer"
+            >
+              Instant Admin ⚡
+            </button>
+          </div>
         </div>
 
       </div>

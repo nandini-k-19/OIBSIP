@@ -1,4 +1,4 @@
-﻿services:
+services:
   - type: web
     name: pizzahub-backend
     runtime: python
@@ -23,10 +23,8 @@
           type: web
           name: pizzahub-backend
           property: host
-          value: https://${host}/api
       - key: VITE_WS_URL
         fromService:
           type: web
           name: pizzahub-backend
           property: host
-          value: wss://${host}

@@ -19,8 +19,12 @@ export function AuthProvider({ children }) {
           setUser(res.data);
           localStorage.setItem('pizzahub_user', JSON.stringify(res.data));
         } catch (err) {
-          console.warn('Session expired or invalid token');
-          logout();
+          if (err.response && err.response.status === 401) {
+            console.warn('Session expired or invalid token');
+            logout();
+          } else {
+            console.warn('Backend server connecting or waking up; retained local session.');
+          }
         }
       }
       setLoading(false);
