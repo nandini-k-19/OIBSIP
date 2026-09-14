@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+backend/venv/
+backend/env/
+.pytest_cache/
+*.db
+pizzahub.db
+
+# Node.js
+node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+.npm/
+
+# Environment Variables & Secrets
+.env
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+!.env.example
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
