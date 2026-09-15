@@ -86,15 +86,15 @@ export default function AdminOrders() {
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-white dark:bg-pizza-cardDark p-4 rounded-2xl border border-pizza-borderLight dark:border-pizza-borderDark shadow-sm">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-[#FFF3DC] dark:bg-[#15100F] p-4 rounded-2xl border border-[#EAD5C5] dark:border-[#2A1A18] shadow-sm">
         <div className="relative w-full sm:w-80">
-          <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-[#AFA08F]" />
           <input
             type="text"
             placeholder="Search by #order, name, or phone..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl border border-pizza-borderLight dark:border-pizza-borderDark bg-white dark:bg-pizza-dark text-pizza-textLight dark:text-white text-xs focus:ring-2 focus:ring-pizza-red/20 focus:border-pizza-red"
+            className="w-full pl-10 pr-4 py-2 rounded-xl border border-[#EAD5C5] dark:border-[#2A1A18] bg-[#FAF5EE] dark:bg-[#181313] text-gray-900 dark:text-[#FFF1D6] text-xs focus:ring-2 focus:ring-pizza-red/20 focus:border-pizza-red"
           />
         </div>
 
@@ -106,7 +106,7 @@ export default function AdminOrders() {
               className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
                 statusFilter === st
                   ? 'bg-pizza-burgundy dark:bg-pizza-red text-white shadow-sm'
-                  : 'bg-gray-100 dark:bg-pizza-dark text-pizza-mutedLight dark:text-pizza-mutedDark hover:bg-gray-200 dark:hover:bg-gray-800'
+                  : 'bg-[#FFE4C4] dark:bg-[#1A1211] text-gray-700 dark:text-[#D6C2A5] hover:bg-[#F8D4C0] dark:hover:bg-[#251A18]'
               }`}
             >
               {st === 'all' ? 'All' : st.replace(/_/g, ' ')}
@@ -119,23 +119,23 @@ export default function AdminOrders() {
       {loading ? (
         <div className="min-h-[50vh] flex flex-col items-center justify-center space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-pizza-red border-t-transparent"></div>
-          <p className="text-gray-400 text-sm">Loading active orders...</p>
+          <p className="text-gray-500 dark:text-[#AFA08F] text-sm">Loading active orders...</p>
         </div>
       ) : filteredOrders.length === 0 ? (
-        <div className="text-center py-16 bg-white dark:bg-pizza-cardDark rounded-3xl border border-pizza-borderLight dark:border-pizza-borderDark space-y-3">
+        <div className="text-center py-16 bg-[#FFF3DC] dark:bg-[#15100F] rounded-3xl border border-[#EAD5C5] dark:border-[#2A1A18] space-y-3">
           <p className="text-4xl">📋</p>
-          <h3 className="text-lg font-bold text-pizza-textLight dark:text-white">No Orders Found</h3>
-          <p className="text-xs text-pizza-mutedLight dark:text-pizza-mutedDark">No matching orders in the selected queue.</p>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-[#FFF1D6]">No Orders Found</h3>
+          <p className="text-xs text-gray-600 dark:text-[#D6C2A5]">No matching orders in the selected queue.</p>
         </div>
       ) : (
         <div className="space-y-4">
           {filteredOrders.map((order) => (
             <div
               key={order.id}
-              className="bg-white dark:bg-pizza-cardDark p-6 rounded-3xl border border-pizza-borderLight dark:border-pizza-borderDark shadow-sm space-y-5"
+              className="bg-[#FFF3DC] dark:bg-[#15100F] p-6 rounded-3xl border border-[#EAD5C5] dark:border-[#2A1A18] shadow-sm space-y-5"
             >
               {/* Card Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-pizza-borderLight dark:border-pizza-borderDark pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#EAD5C5] dark:border-[#2A1A18] pb-4">
                 <div className="flex items-center gap-3">
                   <span className="text-sm font-mono font-black text-pizza-red">#{order.order_number}</span>
                   <span className={`px-3 py-1 rounded-full text-[11px] font-black uppercase ${
@@ -147,12 +147,12 @@ export default function AdminOrders() {
                   }`}>
                     {order.status.replace(/_/g, ' ')}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-400">
+                  <span className="px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-[#8FE3B0]">
                     {order.payment_status}
                   </span>
                 </div>
 
-                <p className="text-xs text-pizza-mutedLight dark:text-pizza-mutedDark">
+                <p className="text-xs text-gray-500 dark:text-[#AFA08F]">
                   Ordered: {new Date(order.created_at).toLocaleString()}
                 </p>
               </div>
@@ -163,25 +163,25 @@ export default function AdminOrders() {
                 {/* Left: Customer info & Items */}
                 <div className="md:col-span-7 space-y-3">
                   <div>
-                    <h4 className="text-xs font-bold text-gray-400 dark:text-[#B8B8B8] uppercase">Customer & Delivery Details</h4>
-                    <p className="text-sm font-bold text-pizza-textLight dark:text-white mt-0.5">
-                      {order.customer_name} • <span className="font-mono text-xs dark:text-[#E5E5E5]">{order.customer_phone}</span>
+                    <h4 className="text-xs font-bold text-gray-500 dark:text-[#AFA08F] uppercase">Customer & Delivery Details</h4>
+                    <p className="text-sm font-bold text-gray-900 dark:text-[#FFF1D6] mt-0.5">
+                      {order.customer_name} • <span className="font-mono text-xs text-gray-700 dark:text-[#F3DFC0]">{order.customer_phone}</span>
                     </p>
-                    <p className="text-xs text-pizza-mutedLight dark:text-[#B8B8B8] mt-0.5">{order.delivery_address}</p>
+                    <p className="text-xs text-gray-600 dark:text-[#D6C2A5] mt-0.5">{order.delivery_address}</p>
                   </div>
 
                   <div className="pt-2">
-                    <h4 className="text-xs font-bold text-gray-400 dark:text-[#B8B8B8] uppercase mb-1.5">Items Ordered</h4>
-                    <div className="space-y-1 bg-gray-50 dark:bg-pizza-dark p-3 rounded-2xl border border-pizza-borderLight dark:border-pizza-borderDark">
+                    <h4 className="text-xs font-bold text-gray-500 dark:text-[#AFA08F] uppercase mb-1.5">Items Ordered</h4>
+                    <div className="space-y-1 bg-[#FFE4C4] dark:bg-[#1A1211] p-3 rounded-2xl border border-[#E5C3AB] dark:border-[#4A0E17]">
                       {order.items?.map((it) => (
                         <div key={it.id} className="flex justify-between text-xs">
-                          <span className="text-pizza-textLight dark:text-[#E5E5E5]">
-                            <strong className="text-pizza-red dark:text-[#FF8A3D]">{it.quantity}x</strong> {it.pizza_name}
+                          <span className="text-gray-800 dark:text-[#F3DFC0]">
+                            <strong className="text-pizza-red dark:text-[#FF9A3D]">{it.quantity}x</strong> {it.pizza_name}
                           </span>
-                          <span className="font-bold text-pizza-textLight dark:text-white">₹{it.total_price}</span>
+                          <span className="font-bold text-gray-900 dark:text-[#FFF1D6]">₹{it.total_price}</span>
                         </div>
                       ))}
-                      <div className="pt-2 mt-1 border-t border-pizza-borderLight dark:border-pizza-borderDark flex justify-between text-xs font-black text-pizza-red dark:text-[#FFC857]">
+                      <div className="pt-2 mt-1 border-t border-[#E5C3AB] dark:border-[#4A0E17] flex justify-between text-xs font-black text-pizza-red dark:text-[#FFC857]">
                         <span>Total Paid (Grand Total)</span>
                         <span>₹{order.grand_total}</span>
                       </div>
@@ -190,14 +190,14 @@ export default function AdminOrders() {
                 </div>
 
                 {/* Right: Status Action Buttons */}
-                <div className="md:col-span-5 bg-gray-50 dark:bg-pizza-dark p-4 rounded-2xl border border-pizza-borderLight dark:border-pizza-borderDark space-y-3">
-                  <h4 className="text-xs font-bold text-gray-400 dark:text-[#B8B8B8] uppercase">Advance Order Status</h4>
+                <div className="md:col-span-5 bg-[#FFE4C4] dark:bg-[#1A1211] p-4 rounded-2xl border border-[#E5C3AB] dark:border-[#4A0E17] space-y-3">
+                  <h4 className="text-xs font-bold text-gray-500 dark:text-[#AFA08F] uppercase">Advance Order Status</h4>
                   
                   <div className="grid grid-cols-1 gap-2">
                     <button
                       disabled={updatingId === order.id || order.status === 'IN_KITCHEN'}
                       onClick={() => handleUpdateStatus(order.id, 'IN_KITCHEN')}
-                      className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-orange-600 hover:bg-orange-700 disabled:opacity-40 transition-colors shadow-sm"
+                      className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-orange-600 hover:bg-orange-700 disabled:opacity-40 transition-colors shadow-sm cursor-pointer"
                     >
                       <div className="flex items-center gap-2">
                         <Flame size={16} /> Send to Kitchen 🔥
@@ -208,7 +208,7 @@ export default function AdminOrders() {
                     <button
                       disabled={updatingId === order.id || order.status === 'SENT_TO_DELIVERY'}
                       onClick={() => handleUpdateStatus(order.id, 'SENT_TO_DELIVERY')}
-                      className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-40 transition-colors shadow-sm"
+                      className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-40 transition-colors shadow-sm cursor-pointer"
                     >
                       <div className="flex items-center gap-2">
                         <Bike size={16} /> Dispatch with Driver 🛵
@@ -219,7 +219,7 @@ export default function AdminOrders() {
                     <button
                       disabled={updatingId === order.id || order.status === 'DELIVERED'}
                       onClick={() => handleUpdateStatus(order.id, 'DELIVERED')}
-                      className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-green-600 hover:bg-green-700 disabled:opacity-40 transition-colors shadow-sm"
+                      className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-green-600 hover:bg-green-700 disabled:opacity-40 transition-colors shadow-sm cursor-pointer"
                     >
                       <div className="flex items-center gap-2">
                         <CheckCircle size={16} /> Mark as Delivered ✓

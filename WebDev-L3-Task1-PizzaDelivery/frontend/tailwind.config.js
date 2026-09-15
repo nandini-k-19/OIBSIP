@@ -34,22 +34,22 @@ export default {
           borderDarkBurgundy: 'rgba(74, 14, 23, 0.6)',
 
           // Dark Mode Text System (Warm, Visible, Cinematic)
-          headDark: '#FFF1D6',          // Warm Ivory / Cream
-          textDark: '#F3DFC0',          // Soft Champagne
-          secondaryDark: '#D6C2A5',     // Warm Beige
-          mutedDark: '#AFA08F',         // Warm Gray
+          headDark: '#e7afbc',          // Warm Ivory / Cream
+          textDark: '#179fe3',          // Soft Champagne
+          secondaryDark: '#340003',     // Warm Beige
+          mutedDark: '#9f0a39',         // Warm Gray
           linkDark: '#FF9A3D',          // Warm Orange
           activeNav: '#FF7043',         // Tomato Orange
           successDark: '#8FE3B0',       // Soft Mint
-          errorDark: '#FF7B7B',         // Soft Coral
+          errorDark: '#cc1010',         // Soft Coral
 
           // Light Mode Backgrounds & Non-White Cards
-          bgLight: '#FAF5EE',           // Warm Pizza World Cream
-          cream: '#FFF3DC',             // Warm Cream Card
-          peach: '#FFE4C4',             // Peach Cream Card
-          terracotta: '#F8D4C0',        // Soft Terracotta Card
-          goldCream: '#FFF0C2',         // Light Golden Cream Card
-          borderLight: '#EAD5C5',
+          bgLight: '#d87a8b',           // Warm Pizza World Cream
+          cream: '#27bfde',             // Warm Cream Card
+          peach: '#422d12',             // Peach Cream Card
+          terracotta: '#a83a52',        // Soft Terracotta Card
+          goldCream: '#a1f5b4',         // Light Golden Cream Card
+          borderLight: '#d99dea',
           textLight: '#2B1810',
           mutedLight: '#6B5E55',
         }

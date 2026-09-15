@@ -27,9 +27,35 @@ export default function OrderTracking() {
   const [wsConnected, setWsConnected] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(new Date());
 
+  const [toastNotification, setToastNotification] = useState('');
+
+  const playStatusPing = () => {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5 note
+      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15); // A5 note
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.3);
+    } catch (e) {
+      // AudioContext not allowed or unsupported
+    }
+  };
+
   const fetchOrderDetails = async () => {
     try {
       const res = await api.get(`/orders/${orderId}`);
+      if (order && res.data.status !== status) {
+        setToastNotification(`Order Status Updated: ${res.data.status.replace(/_/g, ' ')} 🍕`);
+        playStatusPing();
+        setTimeout(() => setToastNotification(''), 4000);
+      }
       setOrder(res.data);
       setStatus(res.data.status);
       setLastUpdated(new Date());
@@ -62,6 +88,11 @@ export default function OrderTracking() {
         try {
           const update = JSON.parse(event.data);
           if (update.status) {
+            if (update.status !== status) {
+              setToastNotification(`Live Kitchen Update: ${update.status.replace(/_/g, ' ')} 🍕`);
+              playStatusPing();
+              setTimeout(() => setToastNotification(''), 4000);
+            }
             setStatus(update.status);
             setLastUpdated(new Date());
           }
@@ -128,9 +159,19 @@ export default function OrderTracking() {
 
   const currentIdx = getCurrentStageIndex();
 
+  const isCancelled = status === 'CANCELLED';
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 transition-colors duration-300">
       
+      {/* Real-time Push Alert Toast */}
+      {toastNotification && (
+        <div className="fixed bottom-6 right-6 z-50 bg-pizza-burgundy text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 border border-pizza-amber/40 animate-in fade-in slide-in-from-bottom-5">
+          <span className="text-xl">🔔</span>
+          <span className="text-sm font-bold">{toastNotification}</span>
+        </div>
+      )}
+
       {/* Top Header Bar */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#EAD5C5] dark:border-[#2A1A18] pb-4">
         <div>
@@ -158,67 +199,84 @@ export default function OrderTracking() {
       {/* Main Status Card */}
       <div className="bg-[#FFF3DC] dark:bg-[#15100F] p-6 sm:p-10 rounded-3xl border border-[#EAD5C5] dark:border-[#2A1A18] shadow-lg space-y-10">
         
-        {/* Status Stepper */}
-        <div className="relative">
-          <div className="hidden sm:block absolute top-1/2 left-6 right-6 h-1 bg-[#FFE4C4] dark:bg-[#2A1A18] -translate-y-1/2 z-0"></div>
-          <div
-            className="hidden sm:block absolute top-1/2 left-6 h-1 bg-pizza-red -translate-y-1/2 z-0 transition-all duration-700"
-            style={{ width: `${(Math.max(0, currentIdx) / (STAGES.length - 1)) * 100}%` }}
-          ></div>
+        {isCancelled ? (
+          <div className="p-6 rounded-2xl bg-red-100/60 dark:bg-red-950/40 border border-red-300 dark:border-red-900/60 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+            <div className="w-14 h-14 rounded-2xl bg-red-600 text-white flex items-center justify-center shrink-0 shadow-lg">
+              <AlertTriangle size={28} />
+            </div>
+            <div className="space-y-1">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-red-700 dark:text-[#FF7B7B]">Order Update</span>
+              <h3 className="text-lg font-black text-red-900 dark:text-[#FF7B7B]">This order was Cancelled</h3>
+              <p className="text-xs text-red-700 dark:text-[#F3DFC0]">
+                If you were charged, a full refund has been initiated to your original payment method. For inquiries, contact support at <code>support@pizzahub.com</code>.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Status Stepper */}
+            <div className="relative">
+              <div className="hidden sm:block absolute top-1/2 left-6 right-6 h-1 bg-[#FFE4C4] dark:bg-[#2A1A18] -translate-y-1/2 z-0"></div>
+              <div
+                className="hidden sm:block absolute top-1/2 left-6 h-1 bg-pizza-red -translate-y-1/2 z-0 transition-all duration-700"
+                style={{ width: `${(Math.max(0, currentIdx) / (STAGES.length - 1)) * 100}%` }}
+              ></div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 relative z-10">
-            {STAGES.map((stage, idx) => {
-              const Icon = stage.icon;
-              const isPast = idx <= currentIdx;
-              const isCurrent = idx === currentIdx;
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 relative z-10">
+                {STAGES.map((stage, idx) => {
+                  const Icon = stage.icon;
+                  const isPast = idx <= currentIdx;
+                  const isCurrent = idx === currentIdx;
 
-              return (
-                <div key={stage.key} className="flex flex-col items-center text-center space-y-2">
-                  <div
-                    className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 ${
-                      isCurrent
-                        ? 'bg-pizza-red text-white shadow-xl shadow-red-500/20 scale-110 ring-4 ring-red-100 dark:ring-red-950/60'
-                        : isPast
-                        ? 'bg-green-600 text-white shadow-md'
-                        : 'bg-[#FFE4C4] dark:bg-[#1A1211] text-gray-400 dark:text-[#AFA08F]'
-                    }`}
-                  >
-                    <Icon size={24} className={isCurrent ? 'animate-pulse' : ''} />
-                  </div>
-                  <div>
-                    <h4 className={`text-sm font-bold ${isCurrent ? 'text-pizza-red dark:text-[#FF7043]' : isPast ? 'text-gray-900 dark:text-[#FFF1D6]' : 'text-gray-400 dark:text-[#AFA08F]'}`}>
-                      {stage.label}
-                    </h4>
-                    <p className="text-[11px] text-gray-500 dark:text-[#AFA08F] leading-tight mt-0.5">{stage.desc}</p>
-                  </div>
+                  return (
+                    <div key={stage.key} className="flex flex-col items-center text-center space-y-2">
+                      <div
+                        className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 ${
+                          isCurrent
+                            ? 'bg-pizza-red text-white shadow-xl shadow-red-500/20 scale-110 ring-4 ring-red-100 dark:ring-red-950/60'
+                            : isPast
+                            ? 'bg-green-600 text-white shadow-md'
+                            : 'bg-[#FFE4C4] dark:bg-[#1A1211] text-gray-400 dark:text-[#AFA08F]'
+                        }`}
+                      >
+                        <Icon size={24} className={isCurrent ? 'animate-pulse' : ''} />
+                      </div>
+                      <div>
+                        <h4 className={`text-sm font-bold ${isCurrent ? 'text-pizza-red dark:text-[#FF7043]' : isPast ? 'text-gray-900 dark:text-[#FFF1D6]' : 'text-gray-400 dark:text-[#AFA08F]'}`}>
+                          {stage.label}
+                        </h4>
+                        <p className="text-[11px] text-gray-500 dark:text-[#AFA08F] leading-tight mt-0.5">{stage.desc}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Current Stage Status Banner */}
+            <div className="p-6 rounded-2xl bg-[#FFE4C4] dark:bg-[#1A1211] border border-[#E5C3AB] dark:border-[#4A0E17] flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-4 text-center sm:text-left">
+                <div className="w-12 h-12 rounded-xl bg-[#FFF3DC] dark:bg-[#251A18] text-pizza-red dark:text-[#FFC857] flex items-center justify-center text-2xl shadow-sm border border-[#EAD5C5] dark:border-[#4A0E17]">
+                  {currentIdx === 0 && '📝'}
+                  {currentIdx === 1 && '🔥'}
+                  {currentIdx === 2 && '🛵'}
+                  {currentIdx === 3 && '🍕'}
                 </div>
-              );
-            })}
-          </div>
-        </div>
+                <div>
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-pizza-red dark:text-[#FF9A3D]">Current Order Phase</span>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-[#FFF1D6]">
+                    {currentIdx >= 0 ? STAGES[currentIdx]?.desc : 'Status: ' + status}
+                  </h3>
+                </div>
+              </div>
 
-        {/* Current Stage Status Banner */}
-        <div className="p-6 rounded-2xl bg-[#FFE4C4] dark:bg-[#1A1211] border border-[#E5C3AB] dark:border-[#4A0E17] flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4 text-center sm:text-left">
-            <div className="w-12 h-12 rounded-xl bg-[#FFF3DC] dark:bg-[#251A18] text-pizza-red dark:text-[#FFC857] flex items-center justify-center text-2xl shadow-sm border border-[#EAD5C5] dark:border-[#4A0E17]">
-              {currentIdx === 0 && '📝'}
-              {currentIdx === 1 && '🔥'}
-              {currentIdx === 2 && '🛵'}
-              {currentIdx === 3 && '🍕'}
+              <div className="text-xs text-gray-600 dark:text-[#D6C2A5] text-center sm:text-right">
+                <span>Estimated Delivery:</span>
+                <p className="font-extrabold text-sm text-gray-900 dark:text-[#FFF1D6]">~25-35 Minutes</p>
+              </div>
             </div>
-            <div>
-              <span className="text-[11px] font-extrabold uppercase tracking-wider text-pizza-red dark:text-[#FF9A3D]">Current Order Phase</span>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-[#FFF1D6]">
-                {currentIdx >= 0 ? STAGES[currentIdx]?.desc : 'Status: ' + status}
-              </h3>
-            </div>
-          </div>
-
-          <div className="text-xs text-gray-600 dark:text-[#D6C2A5] text-center sm:text-right">
-            <span>Estimated Delivery:</span>
-            <p className="font-extrabold text-sm text-gray-900 dark:text-[#FFF1D6]">~25-35 Minutes</p>
-          </div>
-        </div>
+          </>
+        )}
 
         {/* Order Details & Summary */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-[#EAD5C5] dark:border-[#2A1A18]">

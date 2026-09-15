@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: Optional[str] = None
     SMTP_FROM_EMAIL: str = "noreply@pizzahub.com"
     ADMIN_EMAIL: str = "admin@pizzahub.com"
+    ADMIN_PASSWORD: str = "admin123"
 
     FRONTEND_URL: str = "http://localhost:5173"
     ENVIRONMENT: str = "development"

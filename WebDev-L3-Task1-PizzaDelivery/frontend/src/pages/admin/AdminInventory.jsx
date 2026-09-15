@@ -144,15 +144,15 @@ export default function AdminInventory() {
       </div>
 
       {/* Filter and Search */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-white dark:bg-pizza-cardDark p-4 rounded-2xl border border-pizza-borderLight dark:border-pizza-borderDark shadow-sm">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-[#FFF3DC] dark:bg-[#15100F] p-4 rounded-2xl border border-[#EAD5C5] dark:border-[#2A1A18] shadow-sm">
         <div className="relative w-full sm:w-80">
-          <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-[#AFA08F]" />
           <input
             type="text"
             placeholder="Search ingredient by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl border border-pizza-borderLight dark:border-pizza-borderDark bg-white dark:bg-pizza-dark text-pizza-textLight dark:text-white text-xs focus:ring-2 focus:ring-pizza-red/20 focus:border-pizza-red"
+            className="w-full pl-10 pr-4 py-2 rounded-xl border border-[#EAD5C5] dark:border-[#2A1A18] bg-[#FAF5EE] dark:bg-[#181313] text-gray-900 dark:text-[#FFF1D6] text-xs focus:ring-2 focus:ring-pizza-red/20 focus:border-pizza-red"
           />
         </div>
 
@@ -164,7 +164,7 @@ export default function AdminInventory() {
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
                 activeCategory === cat
                   ? 'bg-pizza-burgundy dark:bg-pizza-red text-white shadow-sm'
-                  : 'bg-gray-100 dark:bg-pizza-dark text-pizza-mutedLight dark:text-pizza-mutedDark hover:bg-gray-200 dark:hover:bg-gray-800'
+                  : 'bg-[#FFE4C4] dark:bg-[#1A1211] text-gray-700 dark:text-[#D6C2A5] hover:bg-[#F8D4C0] dark:hover:bg-[#251A18]'
               }`}
             >
               {cat === 'all' ? 'All Ingredients' : cat === 'base' ? 'Crust Bases' : cat === 'sauce' ? 'Sauces' : cat === 'cheese' ? 'Cheeses' : 'Veggies'}
@@ -174,10 +174,10 @@ export default function AdminInventory() {
       </div>
 
       {/* Inventory Table */}
-      <div className="bg-white dark:bg-pizza-cardDark rounded-3xl border border-pizza-borderLight dark:border-pizza-borderDark shadow-sm overflow-hidden">
+      <div className="bg-[#FFF3DC] dark:bg-[#15100F] rounded-3xl border border-[#EAD5C5] dark:border-[#2A1A18] shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-gray-50 dark:bg-pizza-dark text-gray-400 uppercase font-extrabold border-b border-pizza-borderLight dark:border-pizza-borderDark">
+            <thead className="bg-[#FFE4C4] dark:bg-[#1A1211] text-gray-700 dark:text-[#D6C2A5] uppercase font-extrabold border-b border-[#EAD5C5] dark:border-[#2A1A18]">
               <tr>
                 <th className="py-3.5 px-6">Ingredient</th>
                 <th className="py-3.5 px-6">Category</th>
@@ -188,41 +188,41 @@ export default function AdminInventory() {
                 <th className="py-3.5 px-6 text-right">Quick Restock</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-pizza-borderLight/60 dark:divide-pizza-borderDark/60">
+            <tbody className="divide-y divide-[#EAD5C5]/60 dark:divide-[#2A1A18]/60">
               {filteredInventory.map((item) => {
                 const isLow = item.stock < item.threshold;
                 const isOut = item.stock <= 0;
 
                 return (
-                  <tr key={`${item.category}-${item.id}`} className="hover:bg-gray-50/70 dark:hover:bg-gray-800/40 transition-colors">
-                    <td className="py-4 px-6 font-bold text-pizza-textLight dark:text-white">
+                  <tr key={`${item.category}-${item.id}`} className="hover:bg-[#FFE4C4]/40 dark:hover:bg-[#1A1211]/50 transition-colors">
+                    <td className="py-4 px-6 font-bold text-gray-900 dark:text-[#FFF1D6]">
                       {item.name}
                     </td>
-                    <td className="py-4 px-6 uppercase font-bold text-gray-400 text-[10px]">
+                    <td className="py-4 px-6 uppercase font-bold text-gray-500 dark:text-[#AFA08F] text-[10px]">
                       {item.category}
                     </td>
-                    <td className="py-4 px-6 font-mono font-bold text-pizza-textLight dark:text-white">
+                    <td className="py-4 px-6 font-mono font-bold text-pizza-red dark:text-[#FFC857]">
                       ₹{item.price}
                     </td>
                     <td className="py-4 px-6">
-                      <span className={`font-mono text-sm font-black ${isOut ? 'text-red-600 dark:text-red-400' : isLow ? 'text-amber-600 dark:text-pizza-amber' : 'text-green-600 dark:text-green-400'}`}>
+                      <span className={`font-mono text-sm font-black ${isOut ? 'text-red-600 dark:text-[#FF7B7B]' : isLow ? 'text-amber-600 dark:text-[#FF7043]' : 'text-green-700 dark:text-[#8FE3B0]'}`}>
                         {item.stock} units
                       </span>
                     </td>
-                    <td className="py-4 px-6 font-mono text-gray-500 dark:text-gray-400">
+                    <td className="py-4 px-6 font-mono text-gray-600 dark:text-[#D6C2A5]">
                       {item.threshold} units
                     </td>
                     <td className="py-4 px-6">
                       {isOut ? (
-                        <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300">
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-[#FF7B7B]">
                           Out of Stock
                         </span>
                       ) : isLow ? (
-                        <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 animate-pulse">
-                          Low Stock
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-[#FF9A3D] animate-pulse">
+                          Low Stock Warning
                         </span>
                       ) : (
-                        <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-green-100 dark:bg-green-950/60 text-green-800 dark:text-green-300">
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-green-100 dark:bg-green-950/60 text-green-800 dark:text-[#8FE3B0]">
                           Optimal Stock
                         </span>
                       )}
@@ -230,7 +230,7 @@ export default function AdminInventory() {
                     <td className="py-4 px-6 text-right">
                       <button
                         onClick={() => handleOpenEditModal(item)}
-                        className="px-3.5 py-1.5 rounded-xl font-bold text-[11px] text-white bg-pizza-burgundy dark:bg-pizza-red hover:bg-pizza-deepWine dark:hover:bg-pizza-darkRed transition-colors shadow-sm"
+                        className="px-3.5 py-1.5 rounded-xl font-bold text-[11px] text-white bg-pizza-burgundy dark:bg-pizza-red hover:bg-pizza-deepWine dark:hover:bg-pizza-darkRed transition-colors shadow-sm cursor-pointer"
                       >
                         Adjust / Restock &rarr;
                       </button>
@@ -245,37 +245,37 @@ export default function AdminInventory() {
 
       {/* Edit & Restock Modal */}
       {editingItem && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-white dark:bg-pizza-cardDark rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl border border-pizza-borderLight dark:border-pizza-borderDark">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-[#FFF3DC] dark:bg-[#15100F] rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl border border-[#EAD5C5] dark:border-[#2A1A18]">
             
-            <div className="flex justify-between items-center border-b border-pizza-borderLight dark:border-pizza-borderDark pb-3">
+            <div className="flex justify-between items-center border-b border-[#EAD5C5] dark:border-[#2A1A18] pb-3">
               <div>
-                <span className="text-[10px] uppercase font-bold text-gray-400">{editingItem.category}</span>
-                <h3 className="text-xl font-black text-pizza-textLight dark:text-white">{editingItem.name}</h3>
+                <span className="text-[10px] uppercase font-bold text-gray-500 dark:text-[#AFA08F]">{editingItem.category}</span>
+                <h3 className="text-xl font-black text-gray-900 dark:text-[#FFF1D6]">{editingItem.name}</h3>
               </div>
               <button
                 onClick={() => setEditingItem(null)}
-                className="p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white"
+                className="p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white cursor-pointer"
               >
                 <X size={20} />
               </button>
             </div>
 
             {/* Current Stock Banner */}
-            <div className="p-4 rounded-2xl bg-gray-50 dark:bg-pizza-dark border border-pizza-borderLight dark:border-pizza-borderDark flex justify-between items-center">
+            <div className="p-4 rounded-2xl bg-[#FFE4C4] dark:bg-[#1A1211] border border-[#E5C3AB] dark:border-[#4A0E17] flex justify-between items-center">
               <div>
-                <span className="text-xs text-gray-400">Current In-Stock:</span>
-                <p className="text-2xl font-black text-pizza-textLight dark:text-white">{editingItem.stock} units</p>
+                <span className="text-xs text-gray-600 dark:text-[#D6C2A5]">Current In-Stock:</span>
+                <p className="text-2xl font-black text-gray-900 dark:text-[#FFF1D6]">{editingItem.stock} units</p>
               </div>
               <div>
-                <span className="text-xs text-gray-400">Safety Threshold:</span>
-                <p className="text-sm font-bold text-pizza-amber">{editingItem.threshold} units</p>
+                <span className="text-xs text-gray-600 dark:text-[#D6C2A5]">Safety Threshold:</span>
+                <p className="text-sm font-bold text-pizza-red dark:text-[#FF9A3D]">{editingItem.threshold} units</p>
               </div>
             </div>
 
             {/* Quick Restock Action */}
             <div className="space-y-3">
-              <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">
+              <label className="block text-xs font-bold text-gray-700 dark:text-[#F3DFC0] uppercase">
                 Add / Deduct Units
               </label>
               <div className="flex gap-2">
@@ -284,19 +284,19 @@ export default function AdminInventory() {
                   min="1"
                   value={stockAmount}
                   onChange={(e) => setStockAmount(e.target.value)}
-                  className="w-full px-4 py-2 rounded-xl border border-pizza-borderLight dark:border-pizza-borderDark bg-white dark:bg-pizza-dark text-pizza-textLight dark:text-white text-sm"
+                  className="w-full px-4 py-2 rounded-xl border border-[#EAD5C5] dark:border-[#2A1A18] bg-[#FAF5EE] dark:bg-[#181313] text-gray-900 dark:text-[#FFF1D6] text-sm"
                 />
                 <button
                   disabled={modalLoading}
                   onClick={() => handleUpdateStock('add')}
-                  className="px-4 py-2 rounded-xl font-bold text-xs text-white bg-green-600 hover:bg-green-700 transition-colors shadow-sm flex items-center gap-1"
+                  className="px-4 py-2 rounded-xl font-bold text-xs text-white bg-green-600 hover:bg-green-700 transition-colors shadow-sm flex items-center gap-1 cursor-pointer"
                 >
                   <Plus size={14} /> Add
                 </button>
                 <button
                   disabled={modalLoading}
                   onClick={() => handleUpdateStock('deduct')}
-                  className="px-4 py-2 rounded-xl font-bold text-xs text-white bg-red-600 hover:bg-red-700 transition-colors shadow-sm flex items-center gap-1"
+                  className="px-4 py-2 rounded-xl font-bold text-xs text-white bg-red-600 hover:bg-red-700 transition-colors shadow-sm flex items-center gap-1 cursor-pointer"
                 >
                   <Minus size={14} /> Deduct
                 </button>
@@ -304,21 +304,21 @@ export default function AdminInventory() {
             </div>
 
             {/* Adjust Threshold & Price */}
-            <div className="pt-3 border-t border-pizza-borderLight dark:border-pizza-borderDark space-y-3">
+            <div className="pt-3 border-t border-[#EAD5C5] dark:border-[#2A1A18] space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1">
+                  <label className="block text-xs font-bold text-gray-700 dark:text-[#F3DFC0] uppercase mb-1">
                     Threshold (units)
                   </label>
                   <input
                     type="number"
                     value={newThreshold}
                     onChange={(e) => setNewThreshold(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-pizza-borderLight dark:border-pizza-borderDark bg-white dark:bg-pizza-dark text-pizza-textLight dark:text-white text-xs"
+                    className="w-full px-3 py-2 rounded-xl border border-[#EAD5C5] dark:border-[#2A1A18] bg-[#FAF5EE] dark:bg-[#181313] text-gray-900 dark:text-[#FFF1D6] text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1">
+                  <label className="block text-xs font-bold text-gray-700 dark:text-[#F3DFC0] uppercase mb-1">
                     Unit Price (₹)
                   </label>
                   <input
@@ -326,7 +326,7 @@ export default function AdminInventory() {
                     step="0.5"
                     value={newPrice}
                     onChange={(e) => setNewPrice(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-pizza-borderLight dark:border-pizza-borderDark bg-white dark:bg-pizza-dark text-pizza-textLight dark:text-white text-xs"
+                    className="w-full px-3 py-2 rounded-xl border border-[#EAD5C5] dark:border-[#2A1A18] bg-[#FAF5EE] dark:bg-[#181313] text-gray-900 dark:text-[#FFF1D6] text-xs"
                   />
                 </div>
               </div>
@@ -334,7 +334,7 @@ export default function AdminInventory() {
               <button
                 disabled={modalLoading}
                 onClick={handleSaveThresholdAndPrice}
-                className="w-full py-2.5 rounded-xl font-bold text-xs text-white bg-pizza-burgundy dark:bg-pizza-red hover:bg-pizza-deepWine transition-colors shadow-sm"
+                className="w-full py-2.5 rounded-xl font-bold text-xs text-white bg-pizza-red hover:bg-pizza-darkRed transition-colors shadow-sm cursor-pointer"
               >
                 Save Item Properties
               </button>

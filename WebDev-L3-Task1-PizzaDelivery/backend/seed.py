@@ -5,6 +5,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from app.database import Base, engine, SessionLocal
+from app.config import settings
 from app.models.user import User, UserRole
 from app.models.admin import Admin
 from app.models.pizza import PizzaBase, Sauce, Cheese, Vegetable, Pizza
@@ -18,26 +19,39 @@ def seed_database(drop_existing=False):
     db = SessionLocal()
 
     try:
-        # 1. Seed Admin Account if not exists
-        admin_user = db.query(User).filter(User.email == "admin@pizzahub.com").first()
-        if not admin_user:
-            print("Creating default Admin user (admin@pizzahub.com)...")
-            admin_user = User(
-                full_name="PizzaHub Master Admin",
-                email="admin@pizzahub.com",
-                hashed_password=hash_password("admin123"),
-                role=UserRole.ADMIN,
-                is_verified=True
-            )
-            db.add(admin_user)
-            db.flush()
+        # 1. Seed Default Admin Account if not exists
+        admin_emails = {"admin@pizzahub.com"}
+        if settings.ADMIN_EMAIL:
+            admin_emails.add(settings.ADMIN_EMAIL.strip().lower())
 
-            admin_meta = Admin(
-                user_id=admin_user.id,
-                department="Operations & Inventory",
-                permissions="all"
-            )
-            db.add(admin_meta)
+        for a_email in admin_emails:
+            admin_user = db.query(User).filter(User.email == a_email).first()
+            if not admin_user:
+                print(f"Creating Admin user ({a_email})...")
+                admin_user = User(
+                    full_name="PizzaHub Master Admin" if a_email == "admin@pizzahub.com" else "Authorized Administrator",
+                    email=a_email,
+                    hashed_password=hash_password(settings.ADMIN_PASSWORD or "admin123"),
+                    role=UserRole.ADMIN,
+                    is_verified=True
+                )
+                db.add(admin_user)
+                db.flush()
+
+                admin_meta = Admin(
+                    user_id=admin_user.id,
+                    department="Operations & Inventory",
+                    permissions="all"
+                )
+                db.add(admin_meta)
+            else:
+                # Ensure existing user has role ADMIN and admin meta record
+                if admin_user.role != UserRole.ADMIN:
+                    admin_user.role = UserRole.ADMIN
+                existing_meta = db.query(Admin).filter(Admin.user_id == admin_user.id).first()
+                if not existing_meta:
+                    db.add(Admin(user_id=admin_user.id, department="Management", permissions="all"))
+                db.flush()
 
         # 2. Seed Demo Customer Account if not exists
         demo_user = db.query(User).filter(User.email == "user@pizzahub.com").first()

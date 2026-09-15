@@ -1,18 +1,47 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { useCart } from '../context/CartContext';
 import { 
   Package, 
   Clock, 
   ChevronRight, 
   ArrowRight,
   ShoppingBag,
-  ExternalLink
+  ExternalLink,
+  RotateCcw
 } from 'lucide-react';
 
 export default function OrderHistory() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [toastMsg, setToastMsg] = useState('');
+  const { addStandardPizza, addCustomPizza } = useCart();
+  const navigate = useNavigate();
+
+  const handleReorder = (order) => {
+    if (!order.items || order.items.length === 0) return;
+    order.items.forEach((item) => {
+      if (item.is_custom && item.customization) {
+        addCustomPizza({
+          pizza_name: item.pizza_name,
+          unit_price: item.unit_price,
+          quantity: item.quantity,
+          customization: item.customization
+        });
+      } else {
+        addStandardPizza({
+          id: item.pizza_id,
+          name: item.pizza_name,
+          base_price: item.unit_price
+        }, item.quantity);
+      }
+    });
+    setToastMsg(`Items from #${order.order_number} added to cart!`);
+    setTimeout(() => {
+      navigate('/cart');
+    }, 800);
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -57,6 +86,14 @@ export default function OrderHistory() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 transition-colors duration-300">
       
+      {/* Toast Notification */}
+      {toastMsg && (
+        <div className="fixed bottom-6 right-6 z-50 bg-pizza-burgundy text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-pizza-gold/40 animate-in fade-in slide-in-from-bottom-5">
+          <span className="text-xl">🍕</span>
+          <span className="text-sm font-bold">{toastMsg}</span>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#EAD5C5] dark:border-[#2A1A18] pb-4">
         <div>
           <h1 className="text-3xl font-black text-gray-900 dark:text-[#FFF1D6] tracking-tight flex items-center gap-2.5">
@@ -130,10 +167,20 @@ export default function OrderHistory() {
                 ))}
               </div>
 
-              {/* Footer Total */}
-              <div className="pt-3 border-t border-[#EAD5C5] dark:border-[#2A1A18] flex justify-between items-center text-sm">
-                <span className="text-xs text-gray-600 dark:text-[#D6C2A5]">Total Paid (incl. Taxes & Delivery)</span>
-                <span className="text-lg font-black text-pizza-red dark:text-[#FFC857]">₹{order.grand_total}</span>
+              {/* Footer Total & Reorder Action */}
+              <div className="pt-3 border-t border-[#EAD5C5] dark:border-[#2A1A18] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-sm">
+                <div>
+                  <span className="text-xs text-gray-600 dark:text-[#D6C2A5]">Total Paid (incl. Taxes & Delivery): </span>
+                  <span className="text-lg font-black text-pizza-red dark:text-[#FFC857]">₹{order.grand_total}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleReorder(order)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-pizza-textLight dark:text-pizza-headDark bg-[#FFE4C4] dark:bg-[#1A1211] hover:bg-[#F8D4C0] dark:hover:bg-[#251A18] border border-[#E5C3AB] dark:border-[#4A0E17] shadow-sm transition-all cursor-pointer"
+                >
+                  <RotateCcw size={13} className="text-pizza-red dark:text-[#FF7043]" />
+                  <span>Reorder This Combo</span>
+                </button>
               </div>
             </div>
           ))}

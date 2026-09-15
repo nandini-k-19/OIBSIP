@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const getBaseUrl = () => {
-  let url = import.meta.env.VITE_API_URL;
+  let url = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL;
   if (url && typeof url === 'string' && url.trim() !== '') {
     url = url.trim();
     if (!url.startsWith('http://') && !url.startsWith('https://')) {

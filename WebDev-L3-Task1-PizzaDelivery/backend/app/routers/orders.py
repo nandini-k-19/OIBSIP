@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.auth.jwt import get_current_user, get_current_admin
-from app.models.user import User
+from app.models.user import User, UserRole
 from app.models.order import Order, OrderStatus
 from app.schemas.order import OrderCreate, OrderResponse, OrderStatusUpdate
 from app.services.order_service import create_pending_order
@@ -48,6 +48,6 @@ def get_order(
     order = db.query(Order).filter(Order.id == order_id).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found.")
-    if order.user_id != current_user.id and current_user.role != "admin":
+    if order.user_id != current_user.id and current_user.role != UserRole.ADMIN and current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Access denied.")
     return order
