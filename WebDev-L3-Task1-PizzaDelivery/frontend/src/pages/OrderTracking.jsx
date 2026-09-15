@@ -9,14 +9,22 @@ import {
   Clock, 
   Radio, 
   ArrowLeft,
-  AlertTriangle
+  AlertTriangle,
+  MapPin,
+  Phone,
+  MessageSquare,
+  Navigation,
+  Sparkles,
+  Zap,
+  ShieldCheck,
+  Thermometer
 } from 'lucide-react';
 
 const STAGES = [
-  { key: 'ORDER_RECEIVED', label: 'Order Received', desc: 'Sent to the kitchen', icon: CheckCircle2 },
-  { key: 'IN_KITCHEN', label: 'In Kitchen', desc: 'Baking in woodfired oven', icon: Flame },
-  { key: 'SENT_TO_DELIVERY', label: 'Out for Delivery', desc: 'Rider is on the way', icon: Bike },
-  { key: 'DELIVERED', label: 'Delivered', desc: 'Enjoy your hot pizza!', icon: PackageCheck },
+  { key: 'ORDER_RECEIVED', label: 'Order Received', desc: 'Sent to hearth kitchen', icon: CheckCircle2, timeEst: '2-3 min' },
+  { key: 'IN_KITCHEN', label: 'In Kitchen Hearth', desc: 'Baking at 450°C stone fire', icon: Flame, timeEst: '8-12 min' },
+  { key: 'SENT_TO_DELIVERY', label: 'GPS In Transit', desc: 'Rider on high-speed route', icon: Bike, timeEst: '12-15 min' },
+  { key: 'DELIVERED', label: 'Arrived & Delivered', desc: 'Hot, fresh & ready to enjoy', icon: PackageCheck, timeEst: '0 min' },
 ];
 
 export default function OrderTracking() {
@@ -26,8 +34,8 @@ export default function OrderTracking() {
   const [loading, setLoading] = useState(true);
   const [wsConnected, setWsConnected] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(new Date());
-
   const [toastNotification, setToastNotification] = useState('');
+  const [gpsProgress, setGpsProgress] = useState(30);
 
   const playStatusPing = () => {
     try {
@@ -52,7 +60,7 @@ export default function OrderTracking() {
     try {
       const res = await api.get(`/orders/${orderId}`);
       if (order && res.data.status !== status) {
-        setToastNotification(`Order Status Updated: ${res.data.status.replace(/_/g, ' ')} 🍕`);
+        setToastNotification(`Live Kitchen Update: ${res.data.status.replace(/_/g, ' ')} 🍕`);
         playStatusPing();
         setTimeout(() => setToastNotification(''), 4000);
       }
@@ -81,7 +89,6 @@ export default function OrderTracking() {
 
       ws.onopen = () => {
         setWsConnected(true);
-        console.log(`WebSocket connected for live order #${orderId}`);
       };
 
       ws.onmessage = (event) => {
@@ -101,8 +108,7 @@ export default function OrderTracking() {
         }
       };
 
-      ws.onerror = (err) => {
-        console.warn('WebSocket error, polling fallback active', err);
+      ws.onerror = () => {
         setWsConnected(false);
       };
 
@@ -110,7 +116,6 @@ export default function OrderTracking() {
         setWsConnected(false);
       };
     } catch (err) {
-      console.error('Could not initialize WebSocket', err);
       setWsConnected(false);
     }
 
@@ -123,6 +128,16 @@ export default function OrderTracking() {
       clearInterval(interval);
     };
   }, [orderId]);
+
+  // Dynamic GPS animation
+  useEffect(() => {
+    let target = 20;
+    if (status === 'ORDER_RECEIVED') target = 15;
+    if (status === 'IN_KITCHEN') target = 45;
+    if (status === 'SENT_TO_DELIVERY') target = 80;
+    if (status === 'DELIVERED') target = 100;
+    setGpsProgress(target);
+  }, [status]);
 
   const getCurrentStageIndex = () => {
     switch (status) {
@@ -139,7 +154,7 @@ export default function OrderTracking() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4 transition-colors duration-300">
         <div className="animate-spin rounded-full h-12 w-12 border-4 border-pizza-red border-t-transparent"></div>
-        <p className="text-gray-500 dark:text-gray-400 font-medium">Connecting to live tracking satellite...</p>
+        <p className="text-gray-500 dark:text-gray-400 font-medium">Connecting to GPS Tracking Satellite...</p>
       </div>
     );
   }
@@ -158,11 +173,10 @@ export default function OrderTracking() {
   }
 
   const currentIdx = getCurrentStageIndex();
-
   const isCancelled = status === 'CANCELLED';
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 transition-colors duration-300">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 transition-colors duration-300">
       
       {/* Real-time Push Alert Toast */}
       {toastNotification && (
@@ -173,31 +187,34 @@ export default function OrderTracking() {
       )}
 
       {/* Top Header Bar */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#EAD5C5] dark:border-[#2A1A18] pb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#EAD5C5] dark:border-[#2A1A18] pb-5">
         <div>
           <Link to="/orders" className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 dark:text-[#AFA08F] hover:text-pizza-red mb-1">
-            <ArrowLeft size={14} /> Back to My Orders
+            <ArrowLeft size={14} /> Back to My Orders Ledger
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-[#FFF1D6] tracking-tight">
-            Live Order Tracking
+          <h1 className="text-3xl sm:text-4xl font-black text-pizza-textLight dark:text-pizza-headDark tracking-tight flex items-center gap-3">
+            <span>Live GPS Mission Control</span>
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
           </h1>
-          <p className="text-xs font-mono text-pizza-red font-bold">
-            Order #{order.order_number}
+          <p className="text-xs font-mono text-pizza-red dark:text-pizza-gold font-bold mt-1">
+            Telemetry Feed for Order #{order.order_number}
           </p>
         </div>
 
-        {/* WebSocket Pulse Indicator */}
-        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFF3DC] dark:bg-[#15100F] border border-[#EAD5C5] dark:border-[#2A1A18] shadow-sm text-xs font-bold">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${wsConnected ? 'bg-green-400 opacity-75' : 'bg-yellow-400 opacity-75'}`}></span>
-            <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${wsConnected ? 'bg-green-500' : 'bg-yellow-500'}`}></span>
+        {/* WebSocket Signal Indicator */}
+        <div className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#FFF3DC] dark:bg-[#15100F] border border-[#EAD5C5] dark:border-[#2A1A18] shadow-md text-xs font-black">
+          <Radio size={14} className={wsConnected ? 'text-emerald-500 animate-spin' : 'text-amber-500'} />
+          <span className="text-pizza-textLight dark:text-pizza-headDark">
+            {wsConnected ? 'WebSocket: Real-Time Active' : 'HTTP Polling Mode'}
           </span>
-          <span className="text-gray-700 dark:text-[#F3DFC0]">{wsConnected ? 'Live WebSocket Active' : 'Polling Fallback Active'}</span>
         </div>
       </div>
 
-      {/* Main Status Card */}
-      <div className="bg-[#FFF3DC] dark:bg-[#15100F] p-6 sm:p-10 rounded-3xl border border-[#EAD5C5] dark:border-[#2A1A18] shadow-lg space-y-10">
+      {/* Main Mission Control Cockpit */}
+      <div className="bg-[#FFF3DC] dark:bg-[#15100F] p-6 sm:p-8 rounded-3xl border border-[#EAD5C5] dark:border-[#4A0E17]/60 shadow-xl space-y-8">
         
         {isCancelled ? (
           <div className="p-6 rounded-2xl bg-red-100/60 dark:bg-red-950/40 border border-red-300 dark:border-red-900/60 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
@@ -205,20 +222,89 @@ export default function OrderTracking() {
               <AlertTriangle size={28} />
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-extrabold uppercase tracking-wider text-red-700 dark:text-[#FF7B7B]">Order Update</span>
-              <h3 className="text-lg font-black text-red-900 dark:text-[#FF7B7B]">This order was Cancelled</h3>
+              <span className="text-xs font-extrabold uppercase tracking-wider text-red-700 dark:text-[#FF7B7B]">Mission Aborted</span>
+              <h3 className="text-lg font-black text-red-900 dark:text-[#FF7B7B]">This Order Was Cancelled</h3>
               <p className="text-xs text-red-700 dark:text-[#F3DFC0]">
-                If you were charged, a full refund has been initiated to your original payment method. For inquiries, contact support at <code>support@pizzahub.com</code>.
+                If you were charged, your refund has been initiated to your original payment method. Contact <code>support@pizzahub.com</code> for any assistance.
               </p>
             </div>
           </div>
         ) : (
           <>
-            {/* Status Stepper */}
-            <div className="relative">
-              <div className="hidden sm:block absolute top-1/2 left-6 right-6 h-1 bg-[#FFE4C4] dark:bg-[#2A1A18] -translate-y-1/2 z-0"></div>
+            {/* 1. Interactive Live GPS Dispatch Simulator Map */}
+            <div className="relative rounded-3xl overflow-hidden bg-[#181313] border border-[#2A1A18] p-6 text-white space-y-6 shadow-inner">
+              
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                <div className="flex items-center gap-2">
+                  <Navigation size={16} className="text-pizza-gold animate-spin" />
+                  <span className="text-xs font-black uppercase tracking-wider text-[#FFF1D6]">Live Radar Dispatch Route</span>
+                </div>
+                <div className="flex items-center gap-4 text-xs">
+                  <span className="text-[#AFA08F]">Hearth: <strong className="text-pizza-gold">450°C Stone Oven</strong></span>
+                  <span className="text-[#AFA08F]">ETA: <strong className="text-emerald-400">~{status === 'DELIVERED' ? '0' : '22'} Mins</strong></span>
+                </div>
+              </div>
+
+              {/* Animated Route Line */}
+              <div className="relative py-6 px-4">
+                <div className="h-2 w-full bg-stone-800 rounded-full relative overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-pizza-red via-pizza-amber to-emerald-400 rounded-full transition-all duration-1000"
+                    style={{ width: `${gpsProgress}%` }}
+                  />
+                </div>
+
+                {/* Waypoints */}
+                <div className="flex justify-between items-center mt-3 text-[11px] font-black">
+                  <div className="flex items-center gap-1.5 text-pizza-red">
+                    <span>🔥</span>
+                    <span>Artisan Kitchen</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-pizza-amber">
+                    <span>🛵</span>
+                    <span>Transit Corridor</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-emerald-400">
+                    <span>📍</span>
+                    <span>Your Doorstep</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Driver & Telemetry Banner */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-stone-800 text-xs">
+                <div className="p-3 rounded-2xl bg-black/40 border border-white/5 flex items-center gap-3">
+                  <span className="text-2xl">🛵</span>
+                  <div>
+                    <p className="text-[10px] text-[#AFA08F] uppercase font-bold">Rider Partner</p>
+                    <p className="font-black text-[#FFF1D6]">Marco Rossi (4.9 ★)</p>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-black/40 border border-white/5 flex items-center gap-3">
+                  <span className="text-2xl">⚡</span>
+                  <div>
+                    <p className="text-[10px] text-[#AFA08F] uppercase font-bold">Dispatch Vehicle</p>
+                    <p className="font-black text-[#FFF1D6]">PizzaHub EV Speedster #07</p>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-black/40 border border-white/5 flex items-center gap-3">
+                  <span className="text-2xl">🛡️</span>
+                  <div>
+                    <p className="text-[10px] text-[#AFA08F] uppercase font-bold">Hearth Thermal Seal</p>
+                    <p className="font-black text-emerald-400">Insulated Hot-Box Active</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* 2. 4-Stage Progress Stepper */}
+            <div className="relative pt-4">
+              <div className="hidden sm:block absolute top-1/2 left-8 right-8 h-1 bg-[#FFE4C4] dark:bg-[#2A1A18] -translate-y-1/2 z-0"></div>
               <div
-                className="hidden sm:block absolute top-1/2 left-6 h-1 bg-pizza-red -translate-y-1/2 z-0 transition-all duration-700"
+                className="hidden sm:block absolute top-1/2 left-8 h-1 bg-gradient-to-r from-pizza-red to-pizza-amber -translate-y-1/2 z-0 transition-all duration-700"
                 style={{ width: `${(Math.max(0, currentIdx) / (STAGES.length - 1)) * 100}%` }}
               ></div>
 
@@ -233,19 +319,19 @@ export default function OrderTracking() {
                       <div
                         className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 ${
                           isCurrent
-                            ? 'bg-pizza-red text-white shadow-xl shadow-red-500/20 scale-110 ring-4 ring-red-100 dark:ring-red-950/60'
+                            ? 'bg-pizza-red text-white shadow-xl shadow-red-500/30 scale-110 ring-4 ring-red-200 dark:ring-red-950/60'
                             : isPast
-                            ? 'bg-green-600 text-white shadow-md'
+                            ? 'bg-emerald-600 text-white shadow-md'
                             : 'bg-[#FFE4C4] dark:bg-[#1A1211] text-gray-400 dark:text-[#AFA08F]'
                         }`}
                       >
                         <Icon size={24} className={isCurrent ? 'animate-pulse' : ''} />
                       </div>
                       <div>
-                        <h4 className={`text-sm font-bold ${isCurrent ? 'text-pizza-red dark:text-[#FF7043]' : isPast ? 'text-gray-900 dark:text-[#FFF1D6]' : 'text-gray-400 dark:text-[#AFA08F]'}`}>
+                        <h4 className={`text-sm font-black ${isCurrent ? 'text-pizza-red dark:text-[#FF7043]' : isPast ? 'text-pizza-textLight dark:text-[#FFF1D6]' : 'text-gray-400 dark:text-[#AFA08F]'}`}>
                           {stage.label}
                         </h4>
-                        <p className="text-[11px] text-gray-500 dark:text-[#AFA08F] leading-tight mt-0.5">{stage.desc}</p>
+                        <p className="text-[11px] text-pizza-mutedLight dark:text-[#AFA08F] leading-tight mt-0.5">{stage.desc}</p>
                       </div>
                     </div>
                   );
@@ -253,50 +339,58 @@ export default function OrderTracking() {
               </div>
             </div>
 
-            {/* Current Stage Status Banner */}
-            <div className="p-6 rounded-2xl bg-[#FFE4C4] dark:bg-[#1A1211] border border-[#E5C3AB] dark:border-[#4A0E17] flex flex-col sm:flex-row items-center justify-between gap-4">
+            {/* 3. Live Phase Action Banner */}
+            <div className="p-6 rounded-2xl bg-[#FFE4C4] dark:bg-[#1A1211] border border-[#E5C3AB] dark:border-[#4A0E17] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
               <div className="flex items-center gap-4 text-center sm:text-left">
-                <div className="w-12 h-12 rounded-xl bg-[#FFF3DC] dark:bg-[#251A18] text-pizza-red dark:text-[#FFC857] flex items-center justify-center text-2xl shadow-sm border border-[#EAD5C5] dark:border-[#4A0E17]">
+                <div className="w-12 h-12 rounded-2xl bg-[#FFF3DC] dark:bg-[#251A18] text-pizza-red dark:text-[#FFC857] flex items-center justify-center text-2xl shadow-sm border border-[#EAD5C5] dark:border-[#4A0E17]">
                   {currentIdx === 0 && '📝'}
                   {currentIdx === 1 && '🔥'}
                   {currentIdx === 2 && '🛵'}
                   {currentIdx === 3 && '🍕'}
                 </div>
                 <div>
-                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-pizza-red dark:text-[#FF9A3D]">Current Order Phase</span>
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-[#FFF1D6]">
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-pizza-red dark:text-[#FF9A3D]">Current Cooking & Dispatch Phase</span>
+                  <h3 className="text-lg font-black text-pizza-textLight dark:text-[#FFF1D6]">
                     {currentIdx >= 0 ? STAGES[currentIdx]?.desc : 'Status: ' + status}
                   </h3>
                 </div>
               </div>
 
-              <div className="text-xs text-gray-600 dark:text-[#D6C2A5] text-center sm:text-right">
-                <span>Estimated Delivery:</span>
-                <p className="font-extrabold text-sm text-gray-900 dark:text-[#FFF1D6]">~25-35 Minutes</p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => alert(`Connecting to PizzaHub Dispatch Support for Order #${order.order_number}`)}
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[#FFF3DC] dark:bg-[#251A18] text-pizza-textLight dark:text-[#FFF1D6] border border-[#EAD5C5] dark:border-[#4A0E17] hover:bg-[#FFE4C4] transition-all flex items-center gap-1.5"
+                >
+                  <Phone size={13} className="text-pizza-red" />
+                  <span>Call Kitchen</span>
+                </button>
               </div>
             </div>
           </>
         )}
 
-        {/* Order Details & Summary */}
+        {/* 4. Order In-Flight Breakdown */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-[#EAD5C5] dark:border-[#2A1A18]">
-          <div>
-            <h4 className="text-xs font-bold text-gray-500 dark:text-[#AFA08F] uppercase tracking-wider mb-2">Delivery Address</h4>
-            <p className="text-sm font-semibold text-gray-800 dark:text-[#F3DFC0]">{order.customer_name} ({order.customer_phone})</p>
-            <p className="text-xs text-gray-600 dark:text-[#D6C2A5] mt-1">{order.delivery_address}</p>
+          <div className="space-y-2">
+            <h4 className="text-xs font-black text-pizza-mutedLight dark:text-[#AFA08F] uppercase tracking-wider">Destination Drop-Off</h4>
+            <div className="p-4 rounded-2xl bg-[#FFE4C4]/50 dark:bg-[#1A1211]/50 border border-[#E5C3AB] dark:border-[#2A1A18] space-y-1">
+              <p className="text-sm font-black text-pizza-textLight dark:text-[#F3DFC0]">{order.customer_name} ({order.customer_phone})</p>
+              <p className="text-xs text-pizza-mutedLight dark:text-[#D6C2A5]">{order.delivery_address}</p>
+            </div>
           </div>
 
-          <div>
-            <h4 className="text-xs font-bold text-gray-500 dark:text-[#AFA08F] uppercase tracking-wider mb-2">Order Items</h4>
-            <div className="space-y-1.5">
+          <div className="space-y-2">
+            <h4 className="text-xs font-black text-pizza-mutedLight dark:text-[#AFA08F] uppercase tracking-wider">In-Flight Pie Manifest</h4>
+            <div className="p-4 rounded-2xl bg-[#FFE4C4]/50 dark:bg-[#1A1211]/50 border border-[#E5C3AB] dark:border-[#2A1A18] space-y-2">
               {order.items?.map((item) => (
                 <div key={item.id} className="flex justify-between text-xs">
-                  <span className="text-gray-700 dark:text-[#F3DFC0]">{item.quantity}x {item.pizza_name}</span>
-                  <span className="font-bold text-gray-900 dark:text-[#FFF1D6]">₹{item.total_price}</span>
+                  <span className="font-bold text-pizza-textLight dark:text-[#F3DFC0]">{item.quantity}x {item.pizza_name}</span>
+                  <span className="font-black text-pizza-textLight dark:text-[#FFF1D6]">₹{item.total_price}</span>
                 </div>
               ))}
               <div className="pt-2 border-t border-[#EAD5C5] dark:border-[#2A1A18] flex justify-between text-sm font-black text-pizza-red dark:text-[#FFC857]">
-                <span>Grand Total Paid</span>
+                <span>Total Charged</span>
                 <span>₹{order.grand_total}</span>
               </div>
             </div>

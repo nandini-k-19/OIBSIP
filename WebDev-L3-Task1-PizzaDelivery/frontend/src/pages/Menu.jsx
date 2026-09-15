@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useCart } from '../context/CartContext';
 import PizzaShapedCard from '../components/PizzaShapedCard';
@@ -13,7 +14,8 @@ import {
   SlidersHorizontal, 
   ShoppingBag,
   ArrowUpDown,
-  Filter
+  Filter,
+  Zap
 } from 'lucide-react';
 
 export default function Menu() {
@@ -26,6 +28,7 @@ export default function Menu() {
   const [maxPrice, setMaxPrice] = useState(1000);
   const [toastMessage, setToastMessage] = useState('');
   const { addStandardPizza } = useCart();
+  const navigate = useNavigate();
 
   // Curated Pizza Universe Collections
   const collections = [
@@ -58,6 +61,12 @@ export default function Menu() {
     addStandardPizza(pizza, 1);
     setToastMessage(`Added ${pizza.name} to cart!`);
     setTimeout(() => setToastMessage(''), 3000);
+  };
+
+  const handleBuyNow = (pizza) => {
+    addStandardPizza(pizza, 1);
+    setToastMessage(`Proceeding to checkout with ${pizza.name}... ⚡`);
+    navigate('/cart');
   };
 
   // Filter & Sort Logic
@@ -302,14 +311,26 @@ export default function Menu() {
                   </div>
                 </div>
 
-                {/* Add to Cart Footer */}
-                <div className="p-6 pt-0">
+                {/* Dual Action Buttons: Add to Cart & Buy Now */}
+                <div className="p-6 pt-0 grid grid-cols-2 gap-2.5">
                   <button
+                    type="button"
                     onClick={() => handleAddToCart(pizza)}
-                    className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-xs font-black text-white bg-gradient-to-r from-pizza-red to-pizza-amber hover:from-pizza-darkRed hover:to-pizza-tomato transition-all shadow-md shadow-red-500/20 active:scale-95 group-hover:shadow-lg cursor-pointer"
+                    className="flex items-center justify-center gap-1.5 py-3 rounded-2xl text-xs font-black text-pizza-textLight dark:text-pizza-headDark bg-[#FFE4C4] dark:bg-[#1A1211] hover:bg-[#F8D4C0] dark:hover:bg-[#251A18] border border-[#E5C3AB] dark:border-[#4A0E17] transition-all shadow-sm active:scale-95 cursor-pointer"
+                    title="Add to your cart"
                   >
-                    <ShoppingBag size={16} className="group-hover:rotate-12 transition-transform" />
-                    <span>Add to Order</span>
+                    <ShoppingBag size={14} />
+                    <span>Add to Cart</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleBuyNow(pizza)}
+                    className="flex items-center justify-center gap-1.5 py-3 rounded-2xl text-xs font-black text-white bg-gradient-to-r from-pizza-red via-pizza-tomato to-pizza-amber hover:from-pizza-darkRed hover:to-pizza-tomato transition-all shadow-md shadow-red-500/25 active:scale-95 group-hover:shadow-lg cursor-pointer"
+                    title="Instant Checkout"
+                  >
+                    <Zap size={14} className="fill-white" />
+                    <span>Buy Now</span>
                   </button>
                 </div>
 
