@@ -86,18 +86,18 @@ export default function LandingPage() {
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pizza-burgundy/5 dark:bg-pizza-burgundy/30 border border-pizza-burgundy/15 dark:border-pizza-amber/30 text-pizza-burgundy dark:text-pizza-amber text-xs font-black uppercase tracking-widest shadow-sm">
                 <Flame size={14} className="text-pizza-red animate-pulse" />
-                <span>THE PIZZA UNIVERSE</span>
+                <span>AUTHENTIC STONE-FIRED</span>
               </div>
 
               {/* Large Heading */}
               <h1 className="text-4xl sm:text-6xl lg:text-6xl font-black tracking-tight leading-[1.08] text-pizza-textLight dark:text-pizza-headDark">
-                Craft Your Perfect <br />
+                Natural Artisan <br />
                 <span className="gradient-text-pizza">Pizza Experience</span>
               </h1>
 
               {/* Supporting Text */}
               <p className="text-base sm:text-lg text-pizza-mutedLight dark:text-pizza-mutedDark max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
-                From classic Italian favorites to your own handcrafted creation. Baked in an authentic 450°C stone oven with 72-hour slow-fermented dough and gourmet cheeses.
+                Authentic, hand-stretched natural sourdough with San Marzano tomatoes, pure Fior di Latte mozzarella, and fresh basil. Baked in an authentic 450°C stone hearth oven.
               </p>
 
               {/* Action Buttons & Chef Pizzo Trigger */}
@@ -273,6 +273,68 @@ export default function LandingPage() {
             ))}
           </div>
         )}
+      </section>
+
+      {/* =========================================================================
+          2.5 NATURAL ARTISAN PIZZA SPOTLIGHT
+          ========================================================================= */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-[#FFF3DC] dark:bg-[#15100F] rounded-3xl p-8 sm:p-12 border border-[#EAD5C5] dark:border-[#4A0E17]/60 shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <div className="lg:col-span-6 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs font-black uppercase tracking-wider">
+              🌿 <span>100% Natural & Organic Ingredients</span>
+            </div>
+            
+            <h2 className="text-3xl sm:text-4xl font-black text-pizza-textLight dark:text-pizza-headDark tracking-tight leading-tight">
+              Natural Artisan Pizza: <br />
+              <span className="text-pizza-red dark:text-pizza-gold">Pure Italian Craftsmanship</span>
+            </h2>
+
+            <p className="text-sm sm:text-base text-pizza-mutedLight dark:text-pizza-mutedDark leading-relaxed">
+              Every Natural Artisan pie begins with organic Italian Caputo 00 flour, fermented for 72 hours with wild sourdough starters. Topped with uncooked crushed San Marzano tomatoes, fresh buffalo mozzarella di bufala, and garden basil—then flash-baked at 450°C for the ultimate airy, digestible crust.
+            </p>
+
+            <div className="grid grid-cols-2 gap-4 pt-2">
+              <div className="p-4 rounded-2xl bg-[#FFE4C4]/60 dark:bg-[#1C1412] border border-[#E5C3AB] dark:border-[#2A1A18]">
+                <p className="text-xl font-black text-pizza-burgundy dark:text-pizza-amber">72 Hours</p>
+                <p className="text-xs text-pizza-mutedLight dark:text-pizza-mutedDark font-medium">Wild Sourdough Fermentation</p>
+              </div>
+              <div className="p-4 rounded-2xl bg-[#FFE4C4]/60 dark:bg-[#1C1412] border border-[#E5C3AB] dark:border-[#2A1A18]">
+                <p className="text-xl font-black text-pizza-burgundy dark:text-pizza-amber">Zero Additives</p>
+                <p className="text-xs text-pizza-mutedLight dark:text-pizza-mutedDark font-medium">Pure Extra Virgin Olive Oil</p>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <Link
+                to="/build-pizza"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl text-sm font-extrabold text-white bg-pizza-red hover:bg-pizza-darkRed shadow-lg shadow-red-500/20 hover:scale-[1.02] transition-all"
+              >
+                <span>Customize Your Natural Pie 🌿</span>
+                <ArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+
+          <div className="lg:col-span-6 relative flex justify-center">
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-[#EAD5C5] dark:border-[#4A0E17]/60 group w-full max-w-md aspect-square">
+              <img
+                src="/natural_artisan_pizza.jpg"
+                alt="Natural Artisan Pizza on Wooden Peel"
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute bottom-4 left-4 right-4 bg-[#15100F]/90 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white/10 text-white flex justify-between items-center shadow-lg">
+                <div>
+                  <p className="text-xs font-black text-[#FFF1D6]">Natural Sourdough Margherita</p>
+                  <p className="text-[10px] text-[#D6C2A5]">Fresh Buffalo Mozzarella & Basil</p>
+                </div>
+                <span className="text-xs font-black text-pizza-gold">₹399</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </section>
 
       {/* =========================================================================
