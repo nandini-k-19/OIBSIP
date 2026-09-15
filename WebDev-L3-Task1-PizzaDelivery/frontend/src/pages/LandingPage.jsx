@@ -28,13 +28,13 @@ export default function LandingPage() {
   const { addStandardPizza } = useCart();
 
   const heroOptions = [
-    { label: '🌿 Natural Margherita', src: '/natural_artisan_pizza.jpg' },
-    { label: '🔥 Rustic Stone-Baked', src: '/natural_rustic_pizza.jpg' },
-    { label: '🍕 Pepperoni Diablo', src: '/pepperoni_diablo_pizza.jpg' },
-    { label: '🍄 Truffle Burrata', src: '/truffle_burrata_pizza.jpg' },
-    { label: '🧀 4-Cheese Formaggi', src: '/four_cheese_gourmet_pizza.jpg' }
+    { label: '✨ Levitating Margherita', src: '/levitating_slice_pizza.jpg' },
+    { label: '🧀 Cheesy Pull Classic', src: '/cheesy_pull_pizza.jpg' },
+    { label: '🌿 Natural Sourdough', src: '/natural_artisan_pizza.jpg' },
+    { label: '🔥 Pepperoni Diablo', src: '/pepperoni_diablo_pizza.jpg' },
+    { label: '🍄 Truffle Burrata', src: '/truffle_burrata_pizza.jpg' }
   ];
-  const [selectedHeroImg, setSelectedHeroImg] = useState('/natural_artisan_pizza.jpg');
+  const [selectedHeroImg, setSelectedHeroImg] = useState('/levitating_slice_pizza.jpg');
 
   useEffect(() => {
     const fetchPizzas = async () => {
@@ -86,18 +86,18 @@ export default function LandingPage() {
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pizza-burgundy/5 dark:bg-pizza-burgundy/30 border border-pizza-burgundy/15 dark:border-pizza-amber/30 text-pizza-burgundy dark:text-pizza-amber text-xs font-black uppercase tracking-widest shadow-sm">
                 <Flame size={14} className="text-pizza-red animate-pulse" />
-                <span>AUTHENTIC STONE-FIRED</span>
+                <span>HEAVENLY WOOD-FIRED PERFECTION</span>
               </div>
 
               {/* Large Heading */}
               <h1 className="text-4xl sm:text-6xl lg:text-6xl font-black tracking-tight leading-[1.08] text-pizza-textLight dark:text-pizza-headDark">
-                Natural Artisan <br />
-                <span className="gradient-text-pizza">Pizza Experience</span>
+                Pure Pizza Euphoria <br />
+                <span className="gradient-text-pizza">In Every Hot Slice</span>
               </h1>
 
               {/* Supporting Text */}
               <p className="text-base sm:text-lg text-pizza-mutedLight dark:text-pizza-mutedDark max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
-                Authentic, hand-stretched natural sourdough with San Marzano tomatoes, pure Fior di Latte mozzarella, and fresh basil. Baked in an authentic 450°C stone hearth oven.
+                Where 72-hour slow-fermented sourdough, vibrant San Marzano plum tomatoes, and molten buffalo mozzarella meet 450°C stone hearth fire. Crisp, airy, and baked to pure culinary bliss.
               </p>
 
               {/* Action Buttons & Chef Pizzo Trigger */}
@@ -241,10 +241,10 @@ export default function LandingPage() {
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-pizza-red dark:text-pizza-gold">
               <Star size={14} className="fill-pizza-red dark:fill-pizza-gold" />
-              <span>Chef's Featured Picks</span>
+              <span>Chef's Signature Vault</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-pizza-textLight dark:text-pizza-headDark tracking-tight mt-1">
-              Signature Pizza Highlights
+              Handcrafted Culinary Wonders
             </h2>
           </div>
           <Link
@@ -344,13 +344,13 @@ export default function LandingPage() {
         
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <span className="text-xs font-black uppercase tracking-widest text-pizza-red dark:text-pizza-gold">
-            Effortless Perfection
+            🛵 30-Minute Dispatch Velocity
           </span>
           <h2 className="text-3xl sm:text-4xl font-black text-pizza-textLight dark:text-pizza-headDark tracking-tight">
-            How The Universe Works
+            From 450°C Hearth Fire To Your Table
           </h2>
           <p className="text-sm text-pizza-mutedLight dark:text-pizza-mutedDark">
-            From our artisan stone hearth directly to your dining table in 3 simple steps.
+            Experience authentic Italian gastronomy delivered straight from the oven in 3 effortless steps.
           </p>
         </div>
 
