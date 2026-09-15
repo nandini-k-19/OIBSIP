@@ -10,12 +10,12 @@ import string
 password_history = []
 
 # --------------------------- Theme ---------------------------
-BG = "#766DAC"         
+BG = "#766DAC"          # soft lavender
 CARD = "#C3B3E2"
-PRIMARY = "#180376"     
+PRIMARY = "#180376"     # royal violet
 PRIMARY_HOVER = "#140650"
-SECONDARY = "#291FB3"   
-ACCENT = "#FF6B6B"     
+SECONDARY = "#291FB3"   # teal
+ACCENT = "#FF6B6B"      # coral
 TEXT = "#202033"
 MUTED = "#050223"
 BORDER = "#CCC4E3"

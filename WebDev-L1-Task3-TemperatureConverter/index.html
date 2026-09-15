@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ThermoFlow - Smart, accurate, and beautifully designed real-time temperature converter supporting Celsius, Fahrenheit, and Kelvin with dynamic visual weather atmospheres.">
+  <meta name="keywords" content="Temperature Converter, Celsius to Fahrenheit, Kelvin Converter, ThermoFlow, Web Dev Task">
+  <title>ThermoFlow — Smart Temperature Converter</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Dynamic Atmospheric Background -->
+  <div id="weatherBackground" class="weather-bg theme-comfortable" aria-hidden="true">
+    <div class="sky-gradient"></div>
+    
+    <!-- Animated Aurora Fluid Gradient Blobs -->
+    <div class="aurora-container" id="auroraContainer">
+      <div class="aurora-blob blob-1"></div>
+      <div class="aurora-blob blob-2"></div>
+      <div class="aurora-blob blob-3"></div>
+      <div class="aurora-blob blob-4"></div>
+    </div>
+
+    <!-- Animated Atmospheric Flow Waves -->
+    <div class="waves-container">
+      <div class="wave-layer wave-1"></div>
+      <div class="wave-layer wave-2"></div>
+    </div>
+
+    <!-- Celestial Element (Sun / Moon / Ice Star Glow) -->
+    <div class="sun-moon-element" id="sunMoonElement">
+      <div class="corona-ring"></div>
+      <div class="celestial-body"></div>
+      <div class="sun-rays"></div>
+    </div>
+
+    <!-- Dynamic Layered Volumetric Floating Clouds -->
+    <div class="clouds-wrapper" id="cloudsWrapper">
+      <!-- Background High-Altitude Wispy Clouds -->
+      <div class="cloud cloud-bg-1"><div class="puff-1"></div><div class="puff-2"></div></div>
+      <div class="cloud cloud-bg-2"><div class="puff-1"></div><div class="puff-2"></div></div>
+      
+      <!-- Foreground Volumetric Puffy Cumulus Clouds -->
+      <div class="cloud cloud-1"><div class="puff-1"></div><div class="puff-2"></div></div>
+      <div class="cloud cloud-2"><div class="puff-1"></div><div class="puff-2"></div></div>
+      <div class="cloud cloud-3"><div class="puff-1"></div><div class="puff-2"></div></div>
+      <div class="cloud cloud-4"><div class="puff-1"></div><div class="puff-2"></div></div>
+      <div class="cloud cloud-5"><div class="puff-1"></div><div class="puff-2"></div></div>
+    </div>
+
+    <!-- Animated Ambient Particles (Snowflakes, Embers, Sunbeams) -->
+    <div class="particles-container" id="particlesContainer"></div>
+  </div>
+
+  <!-- Header / Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="#hero" class="brand-logo" aria-label="ThermoFlow Home">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+          </svg>
+        </div>
+        <span class="brand-name">ThermoFlow</span>
+      </a>
+
+      <nav class="nav-menu">
+        <a href="#converter" class="nav-link">Converter</a>
+        <a href="#formulas" class="nav-link">Formulas</a>
+        <a href="#reference" class="nav-link">Glance</a>
+        <a href="#history" class="nav-link">History</a>
+      </nav>
+
+      <div class="header-actions">
+        <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle dark/light mode" title="Toggle Theme">
+          <span class="icon-sun">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
+          <span class="icon-moon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+          <span class="theme-label" id="themeLabelText">Light</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>Smart Temperature Conversion</span>
+      </div>
+      <h1 class="hero-title">ThermoFlow</h1>
+      <p class="hero-subtitle">
+        Convert temperatures instantly. Simple, accurate, and beautifully designed.
+      </p>
+      <p class="hero-description">
+        Seamlessly convert values between Celsius (°C), Fahrenheit (°F), and Kelvin (K) with dynamic visual atmospheric feedback and precise absolute-zero validation.
+      </p>
+
+      <!-- Atmosphere Visual Card Badge -->
+      <div class="atmosphere-status-badge" id="atmosphereStatusBadge">
+        <span class="status-icon" id="statusIcon">🌿</span>
+        <span class="status-text" id="statusText">Comfortable Atmosphere</span>
+      </div>
+    </section>
+
+    <!-- Main Converter Card Section -->
+    <section id="converter" class="converter-section">
+      <div class="glass-card main-card">
+
+        <!-- Top Card Options Bar -->
+        <div class="card-options-bar">
+          <div class="card-title-group">
+            <h2 class="card-heading">Temperature Converter</h2>
+            <p class="card-subheading">Enter a value and select your input scale</p>
+          </div>
+
+          <!-- Live Conversion Toggle -->
+          <div class="live-toggle-container">
+            <label class="toggle-switch-wrapper" for="liveToggle">
+              <span class="toggle-switch">
+                <input type="checkbox" id="liveToggle" checked aria-label="Toggle live real-time conversion">
+                <span class="toggle-slider"></span>
+              </span>
+              <span class="toggle-label">Live Conversion</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Input Form -->
+        <form id="converterForm" class="converter-form" onsubmit="return false;">
+          
+          <div class="form-grid">
+            
+            <!-- Temperature Value Input -->
+            <div class="input-group">
+              <label for="tempInput" class="input-label">Enter Temperature</label>
+              <div class="input-wrapper">
+                <input 
+                  type="number" 
+                  id="tempInput" 
+                  class="temp-input" 
+                  placeholder="e.g. 25" 
+                  step="any" 
+                  autocomplete="off"
+                  aria-describedby="errorAlert"
+                  required
+                >
+                <button type="button" id="clearInputBtn" class="clear-input-btn" aria-label="Clear temperature input" title="Clear input">
+                  &times;
+                </button>
+              </div>
+            </div>
+
+            <!-- From Unit Selector -->
+            <div class="input-group">
+              <label for="unitSelect" class="input-label">From</label>
+              <div class="segmented-control" id="unitSegmentedControl" role="radiogroup" aria-label="Input temperature unit">
+                <button type="button" class="unit-btn active" data-unit="C" role="radio" aria-checked="true" tabIndex="0">
+                  °C <span class="unit-full">Celsius</span>
+                </button>
+                <button type="button" class="unit-btn" data-unit="F" role="radio" aria-checked="false" tabIndex="-1">
+                  °F <span class="unit-full">Fahrenheit</span>
+                </button>
+                <button type="button" class="unit-btn" data-unit="K" role="radio" aria-checked="false" tabIndex="-1">
+                  K <span class="unit-full">Kelvin</span>
+                </button>
+              </div>
+              <!-- Hidden select fallback for accessibility -->
+              <select id="unitSelect" class="sr-only" aria-label="Select Unit">
+                <option value="C" selected>Celsius (°C)</option>
+                <option value="F">Fahrenheit (°F)</option>
+                <option value="K">Kelvin (K)</option>
+              </select>
+            </div>
+
+          </div>
+
+          <!-- Quick Action Buttons: Swap Unit -->
+          <div class="swap-action-row">
+            <button type="button" id="swapUnitsBtn" class="swap-btn" title="Cycle through temperature units" aria-label="Swap or cycle temperature scale">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/>
+              </svg>
+              <span>Cycle Unit</span>
+            </button>
+          </div>
+
+          <!-- Error Alert Container -->
+          <div id="errorAlert" class="error-alert hidden" role="alert" aria-live="polite">
+            <svg class="error-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span id="errorMessage">Please enter a valid temperature.</span>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons-row">
+            <button type="button" id="convertBtn" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+              <span>Convert Temperature</span>
+            </button>
+
+            <button type="button" id="resetBtn" class="btn btn-secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+              <span>Reset</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Divider -->
+        <hr class="card-divider">
+
+        <!-- Results Display Section -->
+        <div id="resultsSection" class="results-section">
+          <div class="results-header">
+            <h3 class="results-title">Conversion Results</h3>
+            <button type="button" id="copyResultsBtn" class="copy-btn" title="Copy all results to clipboard">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span id="copyBtnText">Copy Results</span>
+            </button>
+          </div>
+
+          <!-- Mini Result Cards Grid -->
+          <div id="resultsGrid" class="results-grid">
+            
+            <!-- Celsius Card -->
+            <div class="result-card" id="cardCelsius" data-unit="C">
+              <div class="result-card-header">
+                <span class="result-unit-symbol">°C</span>
+                <span class="result-unit-name">Celsius</span>
+                <span class="result-card-icon">🌡️</span>
+              </div>
+              <div class="result-value-display">
+                <span class="result-number" id="valCelsius">25</span>
+                <span class="result-degree">°C</span>
+              </div>
+            </div>
+
+            <!-- Fahrenheit Card -->
+            <div class="result-card" id="cardFahrenheit" data-unit="F">
+              <div class="result-card-header">
+                <span class="result-unit-symbol">°F</span>
+                <span class="result-unit-name">Fahrenheit</span>
+                <span class="result-card-icon">🔥</span>
+              </div>
+              <div class="result-value-display">
+                <span class="result-number" id="valFahrenheit">77</span>
+                <span class="result-degree">°F</span>
+              </div>
+            </div>
+
+            <!-- Kelvin Card -->
+            <div class="result-card" id="cardKelvin" data-unit="K">
+              <div class="result-card-header">
+                <span class="result-unit-symbol">K</span>
+                <span class="result-unit-name">Kelvin</span>
+                <span class="result-card-icon">⚛️</span>
+              </div>
+              <div class="result-value-display">
+                <span class="result-number" id="valKelvin">298.15</span>
+                <span class="result-degree">K</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Temperature Scale Visualization Section -->
+        <div class="scale-visualization-section">
+          <div class="scale-header">
+            <h4 class="scale-title">
+              <span>Temperature Scale</span>
+            </h4>
+            <span class="scale-status-badge" id="scaleStatusText">Mild & Pleasant (25°C)</span>
+          </div>
+
+          <!-- Scale Meter Track -->
+          <div class="scale-track-wrapper">
+            <div class="scale-labels">
+              <span class="scale-tag cold-tag">❄️ Cold</span>
+              <span class="scale-tag mild-tag">🌿 Comfortable</span>
+              <span class="scale-tag hot-tag">🔥 Hot</span>
+            </div>
+            <div class="scale-track" id="scaleTrack">
+              <div class="scale-gradient-bar"></div>
+              <div class="scale-marker" id="scaleMarker" style="left: 50%;">
+                <div class="marker-pin"></div>
+                <div class="marker-pulse"></div>
+              </div>
+            </div>
+            <div class="scale-range-ticks">
+              <span>-50°C</span>
+              <span>0°C</span>
+              <span>25°C</span>
+              <span>50°C</span>
+              <span>100°C+</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Quick Reference Presets Section ("Temperature at a Glance") -->
+    <section id="reference" class="reference-section">
+      <div class="section-header">
+        <h2 class="section-title">Temperature at a Glance</h2>
+        <p class="section-subtitle">Click any benchmark card below to populate the converter instantly</p>
+      </div>
+
+      <div class="preset-cards-grid">
+        
+        <button type="button" class="preset-card" data-temp="0" data-unit="C">
+          <div class="preset-icon">🧊</div>
+          <div class="preset-info">
+            <span class="preset-temp">0°C / 32°F</span>
+            <span class="preset-label">Freezing Point of Water</span>
+            <span class="preset-desc">Standard ice formation point at 1 atm</span>
+          </div>
+        </button>
+
+        <button type="button" class="preset-card" data-temp="20" data-unit="C">
+          <div class="preset-icon">🛋️</div>
+          <div class="preset-info">
+            <span class="preset-temp">20°C / 68°F</span>
+            <span class="preset-label">Comfortable Room Temp</span>
+            <span class="preset-desc">Ideal indoor ambient climate</span>
+          </div>
+        </button>
+
+        <button type="button" class="preset-card" data-temp="37" data-unit="C">
+          <div class="preset-icon">🩺</div>
+          <div class="preset-info">
+            <span class="preset-temp">37°C / 98.6°F</span>
+            <span class="preset-label">Human Body Temp</span>
+            <span class="preset-desc">Normal physiological baseline</span>
+          </div>
+        </button>
+
+        <button type="button" class="preset-card" data-temp="100" data-unit="C">
+          <div class="preset-icon">♨️</div>
+          <div class="preset-info">
+            <span class="preset-temp">100°C / 212°F</span>
+            <span class="preset-label">Boiling Point of Water</span>
+            <span class="preset-desc">Liquid to vapor transition point</span>
+          </div>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- Formula Accordion Section -->
+    <section id="formulas" class="formulas-section">
+      <div class="glass-card accordion-card">
+        
+        <button type="button" id="formulasToggleBtn" class="accordion-toggle" aria-expanded="false" aria-controls="formulasContent">
+          <div class="accordion-title-group">
+            <span class="accordion-icon">📐</span>
+            <h3 class="accordion-title">How is it calculated?</h3>
+          </div>
+          <svg class="accordion-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <div id="formulasContent" class="accordion-content hidden" role="region" aria-labelledby="formulasToggleBtn">
+          <div class="formulas-grid">
+            
+            <div class="formula-box">
+              <span class="formula-title">Celsius → Fahrenheit</span>
+              <code class="formula-code">°F = (°C × 9/5) + 32</code>
+              <p class="formula-note">Multiply by 1.8 and add 32</p>
+            </div>
+
+            <div class="formula-box">
+              <span class="formula-title">Fahrenheit → Celsius</span>
+              <code class="formula-code">°C = (°F − 32) × 5/9</code>
+              <p class="formula-note">Subtract 32 and multiply by 5/9</p>
+            </div>
+
+            <div class="formula-box">
+              <span class="formula-title">Celsius → Kelvin</span>
+              <code class="formula-code">K = °C + 273.15</code>
+              <p class="formula-note">Shift baseline by thermodynamic zero</p>
+            </div>
+
+            <div class="formula-box">
+              <span class="formula-title">Kelvin → Celsius</span>
+              <code class="formula-code">°C = K − 273.15</code>
+              <p class="formula-note">Subtract 273.15 from absolute scale</p>
+            </div>
+
+            <div class="formula-box">
+              <span class="formula-title">Fahrenheit → Kelvin</span>
+              <code class="formula-code">K = (°F − 32) × 5/9 + 273.15</code>
+              <p class="formula-note">Convert to Celsius first, then add 273.15</p>
+            </div>
+
+            <div class="formula-box">
+              <span class="formula-title">Kelvin → Fahrenheit</span>
+              <code class="formula-code">°F = (K − 273.15) × 9/5 + 32</code>
+              <p class="formula-note">Convert to Celsius first, then apply Fahrenheit scale</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Recent Conversions Section (History) -->
+    <section id="history" class="history-section">
+      <div class="glass-card history-card">
+        
+        <div class="history-header">
+          <div class="history-title-group">
+            <span class="history-icon">📜</span>
+            <h3 class="history-title">Recent Conversions</h3>
+          </div>
+          <button type="button" id="clearHistoryBtn" class="clear-history-btn" title="Clear saved conversion history">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            <span>Clear History</span>
+          </button>
+        </div>
+
+        <div id="historyList" class="history-list">
+          <div class="history-empty-state">
+            <p>No recent conversions yet. Perform a conversion to record history!</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Notification Toast Container -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite">
+    <span id="toastMessage">Copied successfully!</span>
+  </div>
+
+  <!-- Professional Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      
+      <div class="footer-brand">
+        <div class="brand-logo">
+          <div class="logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+            </svg>
+          </div>
+          <span class="brand-name">ThermoFlow</span>
+        </div>
+        <p class="footer-tagline">Smart Temperature Converter</p>
+      </div>
+
+      <div class="footer-info">
+        <h4 class="footer-heading">Limits Reference</h4>
+        <ul class="limits-list">
+          <li><strong>°C Absolute Zero:</strong> -273.15°C</li>
+          <li><strong>°F Absolute Zero:</strong> -459.67°F</li>
+          <li><strong>K Absolute Zero:</strong> 0 K</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 ThermoFlow. All rights reserved by Nandini.</p>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>

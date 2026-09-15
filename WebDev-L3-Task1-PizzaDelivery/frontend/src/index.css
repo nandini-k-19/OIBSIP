@@ -34,9 +34,9 @@
   --bg-card-alt: #181313;
   --bg-elevated: #1B1412;
   --border-color: #3A2520;
-  --text-primary: #FFF1D6;
-  --text-body: #F3DFC0;
-  --text-secondary: #D6C2A5;
+  --text-primary: #e06636;
+  --text-body: #f3914b;
+  --text-secondary: #dd7d39;
   --text-muted: #AFA08F;
   --price-gold: #FFC857;
   --accent-orange: #FF9A3D;
@@ -75,9 +75,9 @@
 .bg-pizza-world-dark {
   background-color: #0B0909;
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(74, 14, 23, 0.45) 0%, transparent 45%),
+    radial-gradient(circle at 15% 15%, rgba(233, 120, 54, 0.45) 0%, transparent 45%),
     radial-gradient(circle at 85% 65%, rgba(56, 4, 14, 0.35) 0%, transparent 45%),
-    radial-gradient(circle at 50% 30%, rgba(255, 200, 87, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 50% 30%, rgba(239, 128, 23, 0.04) 0%, transparent 50%),
     radial-gradient(circle at 50% 90%, rgba(74, 14, 23, 0.30) 0%, transparent 50%);
   background-attachment: fixed;
 }
@@ -195,7 +195,7 @@
 /* 1. Body & Default Dark Surface */
 .dark body {
   background-color: #0B0909;
-  color: #F3DFC0;
+  color: #f4a968;
 }
 
 /* 2. Headings (H1 - H6) in Warm Ivory / Cream */
@@ -206,14 +206,14 @@
 .dark h5, 
 .dark h6,
 .dark .text-heading {
-  color: #FFF1D6 !important;
+  color: #f07b32 !important;
 }
 
 /* 3. Base Body Text & Paragraphs in Soft Champagne */
 .dark p, 
 .dark li, 
 .dark label {
-  color: #F3DFC0;
+  color: #a37836;
 }
 
 /* 4. Global Dark Mode Overrides for Hardcoded Light/Dark Gray Classes */
@@ -227,7 +227,7 @@
 .dark .text-zinc-800,
 .dark .text-black,
 .dark .text-pizza-textLight {
-  color: #FFF1D6 !important;
+  color: #e7a04f !important;
 }
 
 .dark .text-gray-700,
@@ -250,7 +250,7 @@
 .dark .text-zinc-500,
 .dark .text-zinc-400,
 .dark .text-pizza-mutedLight {
-  color: #D6C2A5 !important;
+  color: #e58837 !important;
 }
 
 .dark .text-gray-300,
@@ -265,7 +265,7 @@
 .dark .text-zinc-300,
 .dark .text-zinc-200,
 .dark .text-zinc-100 {
-  color: #FFF1D6 !important;
+  color: #d9954c !important;
 }
 
 /* 5. Dark Mode Cards & Surfaces */
@@ -286,21 +286,21 @@
 .dark input,
 .dark select,
 .dark textarea {
-  color: #FFF1D6 !important;
+  color: #f6bc47 !important;
   background-color: #181313 !important;
   border-color: #3A2520 !important;
 }
 
 .dark input::placeholder,
 .dark textarea::placeholder {
-  color: #AFA08F !important;
+  color: #b62b40 !important;
   opacity: 1 !important;
 }
 
 .dark input:focus,
 .dark select:focus,
 .dark textarea:focus {
-  border-color: #FF7043 !important;
+  border-color: #744a1a !important;
   outline: none;
   box-shadow: 0 0 0 2px rgba(255, 112, 67, 0.3) !important;
 }
@@ -312,13 +312,13 @@
 }
 
 .dark th {
-  color: #FFF1D6 !important;
+  color: #eaa824 !important;
   background-color: #181313 !important;
   border-color: #3A2520 !important;
 }
 
 .dark td {
-  color: #F3DFC0 !important;
+  color: #d4a258 !important;
   border-color: rgba(58, 37, 32, 0.6) !important;
 }
 

@@ -12,22 +12,24 @@ Developed for **Oasis Infobyte Internship — Level 3 Task 1 (Web Development)**
 - **25+ Handcrafted Pizza Varieties**:
   - *Classic Italian Collection*: Margherita Classica, Farmhouse Delight, Double Cheese Margherita, Peppy Paneer, Veggie Supreme, Fiery Jalapeno Crunch.
   - *Artisan Special Pizzas*: Truffle Mushroom & Burrata, Burrata Pesto Rosso, Smoked Quattro Formaggi, Caramelized Onion & Brie.
+  - *Natural Artisan Spotlight*: Hand-stretched 72h cold-fermented sourdough pies made with organic Italian Caputo 00 flour and buffalo mozzarella.
   - *Spicy & Fiery Pizzas*: Peri-Peri Inferno, Spicy Paneer Tikka, Jalapeno Diablo Feast.
   - *Cheesy Overload Pizzas*: Triple Cheese Volcano, Garlic Herb 4-Cheese Burst, Ricotta & Sun-Dried Tomato.
   - *Gourmet & Healthy Pizzas*: Mediterranean Garden, Spinach & Artichoke Heart, Vegan Truffle Harvest.
+- **Dual Action Buttons on Every Pizza**: Instant **"Add to Cart"** and express checkout **"⚡ Buy Now"**.
 - **5-Step Interactive Custom Pizza Builder**:
   1. **Crust Base**: Classic Hand-Tossed, Thin Crust, Cheese Burst, 100% Whole Wheat, Artisan Sourdough.
   2. **Gourmet Sauces**: San Marzano Marinara, Spicy Peri-Peri, Creamy Garlic Alfredo, Basil Pesto, Smoky BBQ.
   3. **Cheeses**: Fresh Buffalo Mozzarella, Sharp Wisconsin Cheddar, Smoked Gouda, Greek Feta, Vegan Mozzarella.
   4. **Garden Fresh Toppings (Multi-Select)**: Bell peppers, olives, mushrooms, jalapenos, sweet corn, paneer, and sun-dried tomatoes.
-  5. **Dynamic Real-Time Pricing & Calorie Breakdown**: Updates dynamically before adding to cart.
+  5. **Dynamic Real-Time Pricing & Stock Validation**: Updates dynamically before adding to cart.
 - **Shopping Cart & Checkout**:
-  - Dynamic subtotal, 5% GST calculation, and threshold-based free delivery.
+  - Dynamic subtotal, 5% GST calculation, and threshold-based free express delivery.
   - **Chef Pizzo AI GPS Location Assistant**: Automatically detects user coordinates via browser geolocation with reverse geocoding into delivery address.
 - **Razorpay Test Mode Checkout**: Seamless payment simulation with secure signature verification.
-- **Real-Time WebSocket Order Tracking**:
-  - Live progress stepper (*Order Received &rarr; In Kitchen &rarr; Out for Delivery &rarr; Delivered*).
-  - Instant live synchronization across devices without manual page reloads.
+- **Distinct Order Ledger & Real-Time WebSocket Order Tracking**:
+  - **Orders Ledger (`/orders`)**: Dedicated history page with account statistics (Total Orders, Total Spent, In-Flight Orders), filter tabs (*All*, *Active In-Flight*, *Delivered*, *Cancelled*), receipt modals, and 1-click reorder.
+  - **Live Order Tracker (`/track` & `/track/:orderId`)**: Live 4-stage progress stepper (*Order Received &rarr; In Kitchen &rarr; Out for Delivery &rarr; Delivered*), active order switcher tabs, manual order search radar, and audio ping alerts.
 - **Customer Authentication & Security**:
   - Secure JWT Bearer Token authentication with bcrypt password encryption.
   - Email verification tokens & password recovery flow.
@@ -36,10 +38,10 @@ Developed for **Oasis Infobyte Internship — Level 3 Task 1 (Web Development)**
 ---
 
 ### 🎨 2. Dual-Atmosphere Visual Theme System
-- **Dark Mode (100% Midnight Charcoal Atmosphere)**:
-  - Deep `#070707` / `#0B0B0B` surfaces with subtle burgundy (`#4A0E17`) radial ambient glows.
-  - Zero background doodles or distracting patterns.
-  - High-contrast warm text hierarchy: Warm Ivory (`#FFF1D6`), Soft Champagne (`#F3DFC0`), Gold prices (`#FFC857`), and Tomato accents (`#FF7043`).
+- **Dark Mode (100% Pure Luxury Dark Atmosphere)**:
+  - Deep `#0B0909` base, `#100C0C` section background, `#15100F` card surfaces, and `#1B1412` elevated containers.
+  - Subtle burgundy (`#4A0E17`) radial ambient glows.
+  - High-contrast warm text hierarchy: Warm Ivory (`#FFF1D6` headings), Soft Champagne (`#F3DFC0` body), Warm Beige (`#D6C2A5` secondary), Warm Muted Gray (`#AFA08F`), Gold prices (`#FFC857`), Warm Orange (`#FF9A3D`), and Active Tomato accents (`#FF7043`).
 - **Light Mode ("Pizza World" Atmosphere)**:
   - Warm cream/ivory ambient background (`#FAF5EE`) with delicate artisanal pizza culinary doodles.
   - **Zero plain white cards**: Coordinated warm colored cards (Warm Cream `#FFF3DC`, Peach Cream `#FFE4C4`, Soft Terracotta `#F8D4C0`, Light Golden Cream `#FFF0C2`).
@@ -97,7 +99,7 @@ PizzaHub System
 WebDev-L3-Task1-PizzaDelivery/
 │
 ├── frontend/
-│   ├── public/               # Static assets & Chef avatar
+│   ├── public/               # Static assets, hero images & Chef avatar
 │   ├── src/
 │   │   ├── components/       # Navbar, Footer, ChefPizzo, PizzaShapedCard, VoiceLocationAssistant
 │   │   ├── context/          # AuthContext.jsx, CartContext.jsx, ThemeContext.jsx
