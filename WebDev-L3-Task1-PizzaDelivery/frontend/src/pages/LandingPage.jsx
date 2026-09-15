@@ -27,6 +27,15 @@ export default function LandingPage() {
   const [toastMessage, setToastMessage] = useState('');
   const { addStandardPizza } = useCart();
 
+  const heroOptions = [
+    { label: '🌿 Natural Margherita', src: '/natural_artisan_pizza.jpg' },
+    { label: '🔥 Rustic Stone-Baked', src: '/natural_rustic_pizza.jpg' },
+    { label: '🍕 Pepperoni Diablo', src: '/pepperoni_diablo_pizza.jpg' },
+    { label: '🍄 Truffle Burrata', src: '/truffle_burrata_pizza.jpg' },
+    { label: '🧀 4-Cheese Formaggi', src: '/four_cheese_gourmet_pizza.jpg' }
+  ];
+  const [selectedHeroImg, setSelectedHeroImg] = useState('/natural_artisan_pizza.jpg');
+
   useEffect(() => {
     const fetchPizzas = async () => {
       try {
@@ -180,9 +189,9 @@ export default function LandingPage() {
                 
                 <div className="relative rounded-full overflow-hidden aspect-square border-4 border-amber-900/40 shadow-2xl bg-black">
                   <img
-                    src="/cinematic_pizza_hero.jpg"
+                    src={selectedHeroImg}
                     alt="PizzaHub Masterpiece Pizza"
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-700"
                   />
 
                   {/* Subtle Steam Wisp Overlay Effect */}
@@ -197,6 +206,24 @@ export default function LandingPage() {
                   </span>
                 </div>
 
+              </div>
+
+              {/* Quick Hero Pizza Variant Selector Pills */}
+              <div className="absolute -bottom-14 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-[#FFF3DC]/90 dark:bg-[#15100F]/90 backdrop-blur-md p-1.5 rounded-full border border-[#EAD5C5] dark:border-[#4A0E17]/60 shadow-xl z-30 whitespace-nowrap">
+                {heroOptions.map((opt) => (
+                  <button
+                    key={opt.src}
+                    type="button"
+                    onClick={() => setSelectedHeroImg(opt.src)}
+                    className={`px-3 py-1 text-xs font-black rounded-full transition-all duration-200 cursor-pointer ${
+                      selectedHeroImg === opt.src
+                        ? 'bg-pizza-red text-white shadow-md scale-105'
+                        : 'text-pizza-textLight dark:text-pizza-mutedDark hover:text-pizza-red dark:hover:text-pizza-gold'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
               </div>
 
             </div>
