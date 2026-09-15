@@ -2,8 +2,9 @@ services:
   - type: web
     name: pizzahub
     runtime: python
-    buildCommand: "cd WebDev-L3-Task1-PizzaDelivery/frontend && npm install && npm run build && cd ../backend && pip install -r requirements.txt && python seed.py"
-    startCommand: "cd WebDev-L3-Task1-PizzaDelivery/backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    rootDir: WebDev-L3-Task1-PizzaDelivery
+    buildCommand: "cd frontend && npm install && npm run build && cd ../backend && pip install -r requirements.txt && python seed.py"
+    startCommand: "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.8
