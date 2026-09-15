@@ -2,6 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================================================================
+   GLOBAL CSS VARIABLES SYSTEM (LIGHT & DARK THEMES)
+   ========================================================================= */
+
+:root {
+  /* Light Mode Palette: Warm Pizza World */
+  --bg-page: #FAF5EE;
+  --bg-secondary: #FFF3DC;
+  --bg-card: #FFF3DC;
+  --bg-card-alt: #FFE4C4;
+  --bg-elevated: #F8D4C0;
+  --border-color: #EAD5C5;
+  --text-primary: #2B1810;
+  --text-body: #3D261C;
+  --text-secondary: #6B5E55;
+  --text-muted: #8C7B70;
+  --accent-orange: #FF9A3D;
+  --accent-primary: #FF7043;
+  --price-gold: #D97706;
+  --success: #15803D;
+  --error: #DC2626;
+  --warning: #D97706;
+}
+
+.dark {
+  /* Dark Mode Palette: Pure Luxury Dark & Warm Champagne */
+  --bg-page: #0B0909;
+  --bg-secondary: #100C0C;
+  --bg-card: #15100F;
+  --bg-card-alt: #181313;
+  --bg-elevated: #1B1412;
+  --border-color: #3A2520;
+  --text-primary: #FFF1D6;
+  --text-body: #F3DFC0;
+  --text-secondary: #D6C2A5;
+  --text-muted: #AFA08F;
+  --price-gold: #FFC857;
+  --accent-orange: #FF9A3D;
+  --accent-primary: #FF7043;
+  --success: #8FE3B0;
+  --error: #FF7B7B;
+  --warning: #FFD166;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -27,9 +71,9 @@
   background-attachment: fixed;
 }
 
-/* Dark Mode: 100% Completely Pure Deep Dark Atmosphere (#070707, No Pizza World background) */
+/* Dark Mode: Pure Luxury Dark (#0B0909 with subtle burgundy radiance) */
 .bg-pizza-world-dark {
-  background-color: #070707;
+  background-color: #0B0909;
   background-image: 
     radial-gradient(circle at 15% 15%, rgba(74, 14, 23, 0.45) 0%, transparent 45%),
     radial-gradient(circle at 85% 65%, rgba(56, 4, 14, 0.35) 0%, transparent 45%),
@@ -40,10 +84,10 @@
 
 /* Cinematic Glass & Surface Utilities */
 .cinematic-glass-dark {
-  background: rgba(21, 16, 15, 0.90);
+  background: rgba(21, 16, 15, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(74, 14, 23, 0.5);
+  border: 1px solid rgba(58, 37, 32, 0.8);
 }
 
 .cinematic-glass-light {
@@ -100,7 +144,7 @@
   box-shadow: 0 0 0 4px #4A0E17, 0 8px 28px -4px rgba(255, 112, 67, 0.35);
 }
 
-/* Chef Pizzo Voice Listening Waveform Animation */
+/* Chef Pizzo Voice Waveform Animation */
 @keyframes waveBar {
   0%, 100% { height: 6px; }
   50% { height: 26px; }
@@ -123,115 +167,128 @@
   50% { transform: translateY(-20px) rotate(-12deg); }
 }
 
-.animate-particle-1 {
-  animation: particleFloat1 5s ease-in-out infinite;
-}
-
-.animate-particle-2 {
-  animation: particleFloat2 7s ease-in-out infinite;
-}
+.animate-particle-1 { animation: particleFloat1 5s ease-in-out infinite; }
+.animate-particle-2 { animation: particleFloat2 7s ease-in-out infinite; }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
-
 ::-webkit-scrollbar-track {
   background: #FAF5EE;
 }
-
 .dark ::-webkit-scrollbar-track {
-  background: #070707;
+  background: #0B0909;
 }
-
 ::-webkit-scrollbar-thumb {
   background: #D90429;
   border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: #C1121F;
 }
 
 /* =========================================================================
-   DARK MODE TEXT ACCESSIBILITY & CONTRAST HIERARCHY
+   BULLETPROOF GLOBAL DARK MODE CONTRAST & TYPOGRAPHY SYSTEM
    ========================================================================= */
 
-/* Ensure complete dark background & bright warm champagne text */
+/* 1. Body & Default Dark Surface */
 .dark body {
-  background-color: #070707;
+  background-color: #0B0909;
   color: #F3DFC0;
 }
 
-/* Headings in Dark Mode in Warm Ivory / Cream */
-.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+/* 2. Headings (H1 - H6) in Warm Ivory / Cream */
+.dark h1, 
+.dark h2, 
+.dark h3, 
+.dark h4, 
+.dark h5, 
+.dark h6,
+.dark .text-heading {
   color: #FFF1D6 !important;
 }
 
-/* Base text readability in Soft Champagne */
-.dark p, .dark span, .dark li, .dark label {
+/* 3. Base Body Text & Paragraphs in Soft Champagne */
+.dark p, 
+.dark li, 
+.dark label {
   color: #F3DFC0;
 }
 
-/* Muted & Secondary text in Warm Light Sand (Ultra-Visible on Dark) */
-.dark .text-gray-400,
-.dark .text-stone-400,
-.dark .text-neutral-400,
-.dark .text-zinc-400,
-.dark .text-gray-500,
-.dark .text-stone-500,
-.dark .text-neutral-500,
-.dark .text-zinc-500 {
-  color: #C2AF98 !important;
+/* 4. Global Dark Mode Overrides for Hardcoded Light/Dark Gray Classes */
+.dark .text-gray-900,
+.dark .text-gray-800,
+.dark .text-stone-900,
+.dark .text-stone-800,
+.dark .text-neutral-900,
+.dark .text-neutral-800,
+.dark .text-zinc-900,
+.dark .text-zinc-800,
+.dark .text-black,
+.dark .text-pizza-textLight {
+  color: #FFF1D6 !important;
 }
 
+.dark .text-gray-700,
 .dark .text-gray-600,
+.dark .text-stone-700,
 .dark .text-stone-600,
+.dark .text-neutral-700,
 .dark .text-neutral-600,
+.dark .text-zinc-700,
 .dark .text-zinc-600 {
+  color: #F3DFC0 !important;
+}
+
+.dark .text-gray-500,
+.dark .text-gray-400,
+.dark .text-stone-500,
+.dark .text-stone-400,
+.dark .text-neutral-500,
+.dark .text-neutral-400,
+.dark .text-zinc-500,
+.dark .text-zinc-400,
+.dark .text-pizza-mutedLight {
   color: #D6C2A5 !important;
 }
 
 .dark .text-gray-300,
-.dark .text-stone-300,
-.dark .text-neutral-300,
-.dark .text-zinc-300 {
-  color: #E6D3BA !important;
-}
-
 .dark .text-gray-200,
-.dark .text-stone-200,
-.dark .text-neutral-200,
-.dark .text-zinc-200,
 .dark .text-gray-100,
+.dark .text-stone-300,
+.dark .text-stone-200,
 .dark .text-stone-100,
+.dark .text-neutral-300,
+.dark .text-neutral-200,
 .dark .text-neutral-100,
-.dark .text-zinc-100,
-.dark .text-gray-900,
-.dark .text-stone-900 {
+.dark .text-zinc-300,
+.dark .text-zinc-200,
+.dark .text-zinc-100 {
   color: #FFF1D6 !important;
 }
 
-/* Dark Mode Cards (#15100F with subtle burgundy/gold border) */
+/* 5. Dark Mode Cards & Surfaces */
 .dark .bg-white {
-  background-color: #15100F;
-  border-color: rgba(74, 14, 23, 0.6);
+  background-color: #15100F !important;
+  border-color: #3A2520 !important;
 }
 
 .dark .bg-stone-50,
 .dark .bg-gray-50,
 .dark .bg-gray-100,
 .dark .bg-stone-100 {
-  background-color: #181313;
+  background-color: #181313 !important;
+  border-color: #3A2520 !important;
 }
 
-/* Dark Mode Inputs, Selects & Textareas */
+/* 6. Dark Mode Inputs, Forms & Selects */
 .dark input,
 .dark select,
 .dark textarea {
   color: #FFF1D6 !important;
   background-color: #181313 !important;
-  border-color: rgba(74, 14, 23, 0.7) !important;
+  border-color: #3A2520 !important;
 }
 
 .dark input::placeholder,
@@ -243,54 +300,53 @@
 .dark input:focus,
 .dark select:focus,
 .dark textarea:focus {
-  border-color: #FF9A3D !important;
+  border-color: #FF7043 !important;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 154, 61, 0.25) !important;
+  box-shadow: 0 0 0 2px rgba(255, 112, 67, 0.3) !important;
 }
 
-/* Table Contrast in Dark Mode */
+/* 7. Tables & Grids in Dark Mode */
 .dark table {
   color: #F3DFC0;
-  border-color: rgba(74, 14, 23, 0.5);
+  border-color: #3A2520;
 }
 
 .dark th {
   color: #FFF1D6 !important;
   background-color: #181313 !important;
-  border-color: rgba(74, 14, 23, 0.5) !important;
+  border-color: #3A2520 !important;
 }
 
 .dark td {
   color: #F3DFC0 !important;
-  border-color: rgba(74, 14, 23, 0.3) !important;
+  border-color: rgba(58, 37, 32, 0.6) !important;
 }
 
-/* Explicit Helper Classes */
-.text-dark-head {
-  color: #FFF1D6;
-}
-.text-dark-main {
-  color: #F3DFC0;
-}
-.text-dark-secondary {
-  color: #D6C2A5;
-}
-.text-dark-muted {
-  color: #AFA08F;
-}
-.text-dark-gold {
-  color: #FFC857;
-}
-.text-dark-orange {
+/* 8. Links, Buttons & Status Helpers */
+.dark a:not([class*="btn"]):not([class*="bg-"]):hover {
   color: #FF9A3D;
 }
-.text-dark-active {
-  color: #FF7043;
-}
-.text-dark-success {
-  color: #8FE3B0;
-}
-.text-dark-error {
-  color: #FF7B7B;
+
+.dark .text-price {
+  color: #FFC857 !important;
 }
 
+.dark .text-accent {
+  color: #FF7043 !important;
+}
+
+.dark .text-link {
+  color: #FF9A3D !important;
+}
+
+.dark .text-success {
+  color: #8FE3B0 !important;
+}
+
+.dark .text-error {
+  color: #FF7B7B !important;
+}
+
+.dark .text-warning {
+  color: #FFD166 !important;
+}

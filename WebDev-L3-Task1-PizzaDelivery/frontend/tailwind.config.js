@@ -16,32 +16,35 @@ export default {
           darkRed: '#C1121F',
           tomato: '#D90429',
           orange: '#FF9A3D',
+          accent: '#FF7043',
           amber: '#F77F00',
           gold: '#FFC857',
           cheese: '#FCBF49',
           basil: '#2D6A4F',
           basilLight: '#52B788',
 
-          // Dark Mode Backgrounds & Surfaces
-          dark: '#070707',
-          darkSection: '#0B0B0B',
+          // Dark Mode Backgrounds & Surfaces (Exact User Spec)
+          dark: '#0B0909',
+          darkSection: '#100C0C',
           darkCard: '#15100F',
           cardDark: '#15100F',
           darkCardAlt: '#181313',
-          darkNav: '#090909',
-          darkFooter: '#050505',
-          borderDark: '#2A1A18',
+          darkElevated: '#1B1412',
+          darkNav: '#0B0909',
+          darkFooter: '#0B0909',
+          borderDark: '#3A2520',
           borderDarkBurgundy: 'rgba(74, 14, 23, 0.6)',
 
-          // Dark Mode Text System (Warm, Crisp, High-Contrast Readability)
-          headDark: '#FFF1D6',          // Bright Warm Ivory / Cream
-          textDark: '#F3DFC0',          // Warm Soft Champagne / Off-White
-          secondaryDark: '#E6D3BA',     // Light Warm Sand
-          mutedDark: '#C2AF98',         // Visible Warm Khaki / Light Gray
-          linkDark: '#FFB067',          // Vibrant Warm Gold-Orange
-          activeNav: '#FF7043',         // Tomato Coral Orange
-          successDark: '#8FE3B0',       // Bright Mint Green
-          errorDark: '#FF7B7B',         // High-Contrast Bright Coral Red
+          // Dark Mode Text System (Warm, High-Contrast, Crystal Clear)
+          headDark: '#FFF1D6',          // Warm Ivory / Cream
+          textDark: '#F3DFC0',          // Soft Champagne Body Text
+          secondaryDark: '#D6C2A5',     // Warm Beige Secondary Text
+          mutedDark: '#AFA08F',         // Warm Gray Muted Text
+          linkDark: '#FF9A3D',          // Warm Orange Links
+          activeNav: '#FF7043',         // Tomato Active Link Accent
+          successDark: '#8FE3B0',       // Soft Mint Success
+          errorDark: '#FF7B7B',         // Soft Coral Error
+          warningDark: '#FFD166',       // Golden Sun Warning
 
           // Light Mode Backgrounds & Non-White Cards
           bgLight: '#FAF5EE',           // Warm Pizza World Cream
