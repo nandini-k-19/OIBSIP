@@ -157,7 +157,7 @@
    DARK MODE TEXT ACCESSIBILITY & CONTRAST HIERARCHY
    ========================================================================= */
 
-/* Ensure complete dark background & warm champagne text */
+/* Ensure complete dark background & bright warm champagne text */
 .dark body {
   background-color: #070707;
   color: #F3DFC0;
@@ -165,15 +165,15 @@
 
 /* Headings in Dark Mode in Warm Ivory / Cream */
 .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-  color: #FFF1D6;
+  color: #FFF1D6 !important;
 }
 
 /* Base text readability in Soft Champagne */
-.dark p, .dark span, .dark li {
+.dark p, .dark span, .dark li, .dark label {
   color: #F3DFC0;
 }
 
-/* Muted & Secondary text in Warm Gray & Beige */
+/* Muted & Secondary text in Warm Light Sand (Ultra-Visible on Dark) */
 .dark .text-gray-400,
 .dark .text-stone-400,
 .dark .text-neutral-400,
@@ -182,14 +182,21 @@
 .dark .text-stone-500,
 .dark .text-neutral-500,
 .dark .text-zinc-500 {
-  color: #AFA08F !important;
+  color: #C2AF98 !important;
+}
+
+.dark .text-gray-600,
+.dark .text-stone-600,
+.dark .text-neutral-600,
+.dark .text-zinc-600 {
+  color: #D6C2A5 !important;
 }
 
 .dark .text-gray-300,
 .dark .text-stone-300,
 .dark .text-neutral-300,
 .dark .text-zinc-300 {
-  color: #D6C2A5 !important;
+  color: #E6D3BA !important;
 }
 
 .dark .text-gray-200,
@@ -199,7 +206,9 @@
 .dark .text-gray-100,
 .dark .text-stone-100,
 .dark .text-neutral-100,
-.dark .text-zinc-100 {
+.dark .text-zinc-100,
+.dark .text-gray-900,
+.dark .text-stone-900 {
   color: #FFF1D6 !important;
 }
 
