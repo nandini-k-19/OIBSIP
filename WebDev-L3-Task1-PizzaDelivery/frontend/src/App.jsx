@@ -61,6 +61,14 @@ export default function App() {
                   element={<Navigate to="/orders" replace />}
                 />
                 <Route
+                  path="/track"
+                  element={
+                    <ProtectedRoute>
+                      <OrderTracking />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="/track/:orderId"
                   element={
                     <ProtectedRoute>

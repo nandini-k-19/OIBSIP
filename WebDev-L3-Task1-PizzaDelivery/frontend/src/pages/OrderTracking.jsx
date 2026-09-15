@@ -29,6 +29,8 @@ const STAGES = [
 
 export default function OrderTracking() {
   const { orderId } = useParams();
+  const [userOrders, setUserOrders] = useState([]);
+  const [selectedOrderId, setSelectedOrderId] = useState(orderId || null);
   const [order, setOrder] = useState(null);
   const [status, setStatus] = useState('ORDER_RECEIVED');
   const [loading, setLoading] = useState(true);
@@ -36,6 +38,8 @@ export default function OrderTracking() {
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [toastNotification, setToastNotification] = useState('');
   const [gpsProgress, setGpsProgress] = useState(30);
+  const [searchOrderInput, setSearchOrderInput] = useState('');
+  const [searchError, setSearchError] = useState('');
 
   const playStatusPing = () => {
     try {
@@ -56,9 +60,40 @@ export default function OrderTracking() {
     }
   };
 
-  const fetchOrderDetails = async () => {
+  // Load all user orders initially
+  useEffect(() => {
+    const loadUserOrders = async () => {
+      try {
+        const res = await api.get('/orders');
+        const list = res.data || [];
+        setUserOrders(list);
+
+        // If no specific orderId in URL, pick the most relevant order
+        if (!orderId && list.length > 0) {
+          const activeOrder = list.find(o => ['ORDER_RECEIVED', 'IN_KITCHEN', 'SENT_TO_DELIVERY'].includes(o.status));
+          setSelectedOrderId(activeOrder ? activeOrder.id : list[0].id);
+        } else if (orderId) {
+          setSelectedOrderId(orderId);
+        }
+      } catch (err) {
+        console.error('Failed to load user orders', err);
+      } finally {
+        if (!orderId && (!userOrders || userOrders.length === 0)) {
+          setLoading(false);
+        }
+      }
+    };
+    loadUserOrders();
+  }, [orderId]);
+
+  const fetchOrderDetails = async (idToFetch) => {
+    const id = idToFetch || selectedOrderId;
+    if (!id) {
+      setLoading(false);
+      return;
+    }
     try {
-      const res = await api.get(`/orders/${orderId}`);
+      const res = await api.get(`/orders/${id}`);
       if (order && res.data.status !== status) {
         setToastNotification(`Live Kitchen Update: ${res.data.status.replace(/_/g, ' ')} 🍕`);
         playStatusPing();
@@ -75,17 +110,19 @@ export default function OrderTracking() {
   };
 
   useEffect(() => {
-    fetchOrderDetails();
-  }, [orderId]);
+    if (selectedOrderId) {
+      fetchOrderDetails(selectedOrderId);
+    }
+  }, [selectedOrderId]);
 
   useEffect(() => {
-    if (!orderId) return;
+    if (!selectedOrderId) return;
 
     const wsUrl = WS_BASE_URL;
     let ws;
 
     try {
-      ws = new WebSocket(`${wsUrl}/ws/orders/${orderId}`);
+      ws = new WebSocket(`${wsUrl}/ws/orders/${selectedOrderId}`);
 
       ws.onopen = () => {
         setWsConnected(true);
@@ -120,14 +157,43 @@ export default function OrderTracking() {
     }
 
     const interval = setInterval(() => {
-      fetchOrderDetails();
+      fetchOrderDetails(selectedOrderId);
     }, 5000);
 
     return () => {
       if (ws) ws.close();
       clearInterval(interval);
     };
-  }, [orderId]);
+  }, [selectedOrderId]);
+
+  const handleManualSearch = (e) => {
+    e.preventDefault();
+    setSearchError('');
+    const term = searchOrderInput.trim().replace(/^#/, '');
+    if (!term) return;
+
+    const match = userOrders.find(o => 
+      String(o.id) === term || 
+      String(o.order_number).toLowerCase().includes(term.toLowerCase())
+    );
+
+    if (match) {
+      setSelectedOrderId(match.id);
+      setSearchOrderInput('');
+    } else {
+      // Try direct API fetch with term
+      api.get(`/orders/${term}`)
+        .then(res => {
+          setOrder(res.data);
+          setStatus(res.data.status);
+          setSelectedOrderId(res.data.id);
+          setSearchOrderInput('');
+        })
+        .catch(() => {
+          setSearchError(`Could not find order #${term}. Please check the number.`);
+        });
+    }
+  };
 
   // Dynamic GPS animation
   useEffect(() => {
@@ -161,13 +227,57 @@ export default function OrderTracking() {
 
   if (!order) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-20 text-center space-y-4 transition-colors duration-300">
-        <AlertTriangle size={48} className="text-red-500 mx-auto" />
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Order Not Found</h2>
-        <p className="text-gray-500 dark:text-gray-400 text-sm">We could not locate this order in your account.</p>
-        <Link to="/orders" className="inline-block px-6 py-2.5 rounded-xl font-bold text-white bg-pizza-red">
-          Back to Orders
-        </Link>
+      <div className="max-w-2xl mx-auto px-4 py-16 text-center space-y-6 transition-colors duration-300">
+        <div className="w-20 h-20 rounded-full bg-[#FFF3DC] dark:bg-[#15100F] border border-[#EAD5C5] dark:border-[#4A0E17] text-pizza-red flex items-center justify-center mx-auto text-3xl shadow-lg">
+          🛰️
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-3xl font-black text-pizza-textLight dark:text-pizza-headDark tracking-tight">Live Order Radar Portal</h2>
+          <p className="text-sm text-pizza-mutedLight dark:text-pizza-mutedDark max-w-md mx-auto">
+            Enter your Order Number to connect to real-time stone hearth & GPS dispatch telemetry.
+          </p>
+        </div>
+
+        {/* Search Order Input Form */}
+        <form onSubmit={handleManualSearch} className="max-w-md mx-auto flex gap-2">
+          <input
+            type="text"
+            placeholder="Enter Order # (e.g. ORD-1234 or 1)..."
+            value={searchOrderInput}
+            onChange={(e) => setSearchOrderInput(e.target.value)}
+            className="flex-1 px-4 py-3 rounded-2xl bg-[#FFF3DC] dark:bg-[#15100F] border border-[#EAD5C5] dark:border-[#2A1A18] text-pizza-textLight dark:text-pizza-headDark placeholder-pizza-mutedLight text-sm focus:outline-none focus:ring-2 focus:ring-pizza-red"
+          />
+          <button
+            type="submit"
+            className="px-6 py-3 rounded-2xl font-black text-xs text-white bg-pizza-red hover:bg-pizza-darkRed shadow-md transition-all cursor-pointer"
+          >
+            Track 🔍
+          </button>
+        </form>
+        {searchError && <p className="text-xs font-bold text-red-500">{searchError}</p>}
+
+        {userOrders.length > 0 && (
+          <div className="pt-4 space-y-3">
+            <p className="text-xs font-black uppercase tracking-wider text-pizza-mutedLight dark:text-pizza-mutedDark">Or pick from your recent orders:</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {userOrders.map(o => (
+                <button
+                  key={o.id}
+                  onClick={() => setSelectedOrderId(o.id)}
+                  className="px-3.5 py-1.5 rounded-xl bg-[#FFF3DC] dark:bg-[#15100F] border border-[#EAD5C5] dark:border-[#2A1A18] text-xs font-black text-pizza-textLight dark:text-pizza-headDark hover:border-pizza-red transition-all cursor-pointer"
+                >
+                  #{o.order_number} ({o.status.replace(/_/g, ' ')})
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="pt-4">
+          <Link to="/menu" className="inline-block px-6 py-3 rounded-2xl font-bold text-xs text-white bg-pizza-dark dark:bg-pizza-burgundy hover:bg-black transition-all">
+            Browse Pizza Menu 🍕
+          </Link>
+        </div>
       </div>
     );
   }
@@ -212,6 +322,27 @@ export default function OrderTracking() {
           </span>
         </div>
       </div>
+
+      {/* Quick Order Switcher Carousel / Tab if user has multiple orders */}
+      {userOrders.length > 1 && (
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          <span className="text-xs font-black text-pizza-mutedLight dark:text-pizza-mutedDark whitespace-nowrap">Switch Order:</span>
+          {userOrders.map((o) => (
+            <button
+              key={o.id}
+              onClick={() => setSelectedOrderId(o.id)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
+                String(selectedOrderId) === String(o.id)
+                  ? 'bg-pizza-red text-white shadow-md scale-105'
+                  : 'bg-[#FFF3DC] dark:bg-[#15100F] text-pizza-textLight dark:text-pizza-headDark border border-[#EAD5C5] dark:border-[#2A1A18] hover:border-pizza-red'
+              }`}
+            >
+              <span>#{o.order_number}</span>
+              <span className="text-[10px] opacity-80">({o.status.replace(/_/g, ' ')})</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Main Mission Control Cockpit */}
       <div className="bg-[#FFF3DC] dark:bg-[#15100F] p-6 sm:p-8 rounded-3xl border border-[#EAD5C5] dark:border-[#4A0E17]/60 shadow-xl space-y-8">

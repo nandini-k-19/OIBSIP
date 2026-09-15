@@ -191,7 +191,7 @@ export default function Navbar() {
                   </Link>
 
                   <Link
-                    to="/orders"
+                    to="/track"
                     className={`relative px-3.5 py-2 text-sm font-semibold transition-all duration-300 rounded-full group flex items-center gap-1 ${
                       isActive('/track')
                         ? 'text-pizza-red dark:text-[#FF7043] font-bold bg-[#FFE4C4] dark:bg-[#201412] shadow-sm'
@@ -499,6 +499,14 @@ export default function Navbar() {
                 className="block px-4 py-2.5 rounded-xl text-base font-bold text-pizza-textLight dark:text-pizza-headDark hover:bg-[#FFE4C4] dark:hover:bg-[#15100F]"
               >
                 Orders
+              </Link>
+              <Link
+                to="/track"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-4 py-2.5 rounded-xl text-base font-bold text-pizza-red dark:text-pizza-gold hover:bg-[#FFE4C4] dark:hover:bg-[#15100F] flex items-center gap-1.5"
+              >
+                <Clock size={16} className="text-pizza-gold" />
+                <span>Track Order</span>
               </Link>
               <Link
                 to={user ? "/profile" : "/login"}
