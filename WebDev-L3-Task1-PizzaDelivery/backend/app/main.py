@@ -97,15 +97,9 @@ app.include_router(admin.router, prefix=settings.API_V1_STR)
 app.include_router(ordertracking.router)
 
 
-@app.get("/")
-def root():
-    return {
-        "message": "Welcome to PizzaHub API",
-        "status": "running",
-        "version": settings.VERSION,
-        "docs_url": "/docs"
-    }
-
+import os
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 @app.get("/health")
 def health_check():
@@ -114,3 +108,64 @@ def health_check():
         "service": "PizzaHub API",
         "environment": settings.ENVIRONMENT
     }
+
+
+# =============================================================================
+# SINGLE-URL INTEGRATED FRONTEND + SPA FALLBACK
+# =============================================================================
+
+# Locate the built frontend/dist folder
+dist_candidates = [
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "dist")),
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "dist")),
+    os.path.abspath(os.path.join(os.getcwd(), "frontend", "dist")),
+    os.path.abspath(os.path.join(os.getcwd(), "..", "frontend", "dist")),
+    os.path.abspath(os.path.join(os.getcwd(), "WebDev-L3-Task1-PizzaDelivery", "frontend", "dist")),
+]
+
+frontend_dist_dir = None
+for candidate in dist_candidates:
+    if os.path.exists(candidate) and os.path.isdir(candidate):
+        frontend_dist_dir = candidate
+        break
+
+if frontend_dist_dir:
+    logger.info(f"Single-domain mode active. Serving built React frontend from: {frontend_dist_dir}")
+    assets_dir = os.path.join(frontend_dist_dir, "assets")
+    if os.path.exists(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="static-assets")
+
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        # Do not intercept API, docs, openapi, health, or WebSocket routes
+        if (
+            full_path.startswith("api/") 
+            or full_path.startswith("docs") 
+            or full_path.startswith("redoc")
+            or full_path == "openapi.json" 
+            or full_path == "health" 
+            or full_path.startswith("ws/")
+        ):
+            return None
+
+        # Check if the requested path corresponds to an actual static file (e.g., /favicon.ico, images)
+        target_file = os.path.join(frontend_dist_dir, full_path)
+        if os.path.exists(target_file) and os.path.isfile(target_file):
+            return FileResponse(target_file)
+
+        # Fallback to index.html for all client React Router routes
+        index_file = os.path.join(frontend_dist_dir, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
+        return {"message": "PizzaHub frontend is building or unavailable."}
+else:
+    logger.warning("Frontend dist directory not found. Running in API-only mode.")
+
+    @app.get("/")
+    def root():
+        return {
+            "message": "Welcome to PizzaHub API",
+            "status": "running",
+            "version": settings.VERSION,
+            "docs_url": "/docs"
+        }

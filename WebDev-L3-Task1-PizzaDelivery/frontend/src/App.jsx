@@ -77,6 +77,22 @@ export default function App() {
                   }
                 />
                 <Route
+                  path="/track-order"
+                  element={
+                    <ProtectedRoute>
+                      <OrderTracking />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/track-order/:orderId"
+                  element={
+                    <ProtectedRoute>
+                      <OrderTracking />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="/profile"
                   element={
                     <ProtectedRoute>

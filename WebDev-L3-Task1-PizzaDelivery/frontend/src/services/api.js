@@ -15,9 +15,9 @@ export const getBaseUrl = () => {
 
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
-    if (hostname.includes('onrender.com')) {
-      const backendHost = hostname.replace('frontend', 'backend');
-      return `https://${backendHost}/api`;
+    // In production on any hosting provider (Render, Vercel, Railway, custom domain):
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+      return `${window.location.origin}/api`;
     }
   }
   return 'http://localhost:8000/api';
@@ -35,9 +35,9 @@ export const getWsUrl = () => {
 
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
-    if (hostname.includes('onrender.com')) {
-      const backendHost = hostname.replace('frontend', 'backend');
-      return `wss://${backendHost}`;
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+      const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      return `${wsProtocol}//${window.location.host}`;
     }
   }
   return 'ws://localhost:8000';
